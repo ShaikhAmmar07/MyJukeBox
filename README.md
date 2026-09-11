@@ -123,7 +123,7 @@ No environment variables or server configuration needed.
 
 ## License
 
-MIT License - Feel free to use and modify for personal projects.
+ammarclan09@gmail.com
 
 ## Credits
 
@@ -131,4 +131,3 @@ MIT License - Feel free to use and modify for personal projects.
 - React, Vite, Zustand, idb, jsmediatags
 - iTunes Search API for metadata
 - Public domain / demo MP3 tracks for bundled content
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
