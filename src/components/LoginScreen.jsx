@@ -16,18 +16,24 @@ const playStartSound = () => {
 
 export default function LoginScreen() {
   const login = useStore(s => s.login);
+<<<<<<< HEAD
   const [email, setEmail] = useState('rivalry@retrospotify.com');
   const [password, setPassword] = useState('password123');
   const [connection, setConnection] = useState('dsl');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+=======
+
+  const handleEnter = () => {
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     playStartSound();
     setTimeout(() => {
       if (window.playXPSound) {
         window.playXPSound('Start.mp3');
       }
     }, 500);
+<<<<<<< HEAD
     login(connection, email);
   };
 
@@ -39,10 +45,14 @@ export default function LoginScreen() {
       }
     }, 500);
     login('offline', email);
+=======
+    login();
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   };
 
   return (
     <div className="login-overlay">
+<<<<<<< HEAD
       <div className="xp-window login-window">
         <div className="xp-titlebar">
           <span className="xp-titlebar-text">
@@ -51,6 +61,14 @@ export default function LoginScreen() {
               <path d="M25,35 Q50,20 75,35 M30,50 Q50,38 70,50 M35,65 Q50,55 65,65" stroke="white" strokeWidth="8" fill="none" strokeLinecap="round"/>
             </svg>
             Spotify Login
+=======
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <div className="xp-window login-window">
+        <div className="xp-titlebar">
+          <span className="xp-titlebar-text">
+            <img className="xp-window-icon" src="/favicon.svg" alt="MyJukeBox" />
+            MyJukeBox Login
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
           </span>
           <div className="xp-titlebar-controls">
             <button className="xp-btn-close" disabled>&times;</button>
@@ -58,6 +76,7 @@ export default function LoginScreen() {
         </div>
         <div className="xp-window-body login-body">
           <div className="login-header">
+<<<<<<< HEAD
             <svg className="login-logo" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="45" fill="#1DB954"/>
               <path d="M25,32 Q50,17 75,32 M30,48 Q50,35 70,48 M35,64 Q50,53 65,64" stroke="black" strokeWidth="8" fill="none" strokeLinecap="round"/>
@@ -92,6 +111,15 @@ export default function LoginScreen() {
               <button type="button" className="xp-button" onClick={handleOffline}>Offline Mode</button>
             </div>
           </form>
+=======
+            <img className="login-logo" src="/favicon.svg" alt="MyJukeBox" />
+            <h2>MyJukeBox</h2>
+            <p>Your personal MP3 space.</p>
+          </div>
+          <div className="login-actions">
+            <button type="button" className="xp-button primary" onClick={handleEnter}>Enter MyJukeBox</button>
+          </div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         </div>
       </div>
     </div>

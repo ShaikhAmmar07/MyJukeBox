@@ -1,8 +1,16 @@
 {
+<<<<<<< HEAD
   "name": "mainproject",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+=======
+  "name": "myjukebox",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MyJukeBox - A Windows XP-themed local MP3 player web app with IndexedDB storage",
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,10 +18,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@google/genai": "^2.11.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-draggable": "^4.7.0",
+=======
+    "idb": "^8.0.3",
+    "jsmediatags": "^3.9.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     "zustand": "^5.0.14"
   },
   "devDependencies": {

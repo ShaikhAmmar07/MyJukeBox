@@ -73,18 +73,30 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .xp-dropdown-item { padding: 4px 20px; cursor: pointer; white-space: nowrap; }
 .xp-dropdown-item:hover { background: var(--xp-selection-bg); color: white; }
 .xp-dropdown-menu hr { border: none; border-top: 1px solid #ccc; margin: 2px 0; }
+<<<<<<< HEAD
 .xp-menubar-connection-badge { margin-left: auto; padding: 2px 8px; background: #d4d0c8; border: 1px inset #fff; font-size: 10px; }
 
 /* ===== TOOLBAR ===== */
 .xp-toolbar { background: linear-gradient(180deg, #f6f4ec, #e8e4d8); border-bottom: 1px solid #aca899; display: flex; align-items: center; padding: 4px 8px; gap: 8px; flex-shrink: 0; }
 .xp-toolbar-buttons { display: flex; align-items: center; gap: 2px; }
+=======
+
+/* ===== TOOLBAR ===== */
+.xp-toolbar { background: linear-gradient(180deg, #f6f4ec, #e8e4d8); border-bottom: 1px solid #aca899; display: flex; align-items: center; padding: 4px 8px; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+.xp-toolbar-buttons { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .xp-toolbar-btn { background: none; border: 1px solid transparent; padding: 4px 8px; cursor: pointer; border-radius: 3px; font-family: var(--xp-font); font-size: 11px; display: flex; align-items: center; gap: 4px; }
 .xp-toolbar-btn:hover { border-color: #c0b8a0; background: #f0eed8; }
 .xp-toolbar-btn.active { background: #d8d4c4; border-color: #b0a888; }
 .xp-toolbar-btn:disabled { opacity: 0.5; cursor: default; }
 .xp-toolbar-divider { width: 1px; height: 24px; background: #aca899; margin: 0 4px; }
+<<<<<<< HEAD
 .xp-toolbar-search { margin-left: auto; display: flex; gap: 4px; }
 .xp-toolbar-search input { border: 1px solid #7f9db9; padding: 3px 6px; width: 200px; font-family: var(--xp-font); font-size: 11px; }
+=======
+.xp-toolbar-search { display: flex; gap: 4px; width: 100%; margin-left: 0; }
+.xp-toolbar-search input { border: 1px solid #7f9db9; padding: 3px 6px; flex: 1; font-family: var(--xp-font); font-size: 11px; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .badge { background: red; color: white; font-size: 9px; padding: 1px 4px; border-radius: 8px; margin-left: 2px; }
 
 /* ===== XP BUTTONS ===== */
@@ -98,9 +110,15 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .search-btn { padding: 3px 10px; }
 
 /* ===== MAIN BODY LAYOUT ===== */
+<<<<<<< HEAD
 .xp-main-body { display: flex; flex: 1; overflow: hidden; }
 .xp-sidebar { width: 200px; background: linear-gradient(180deg, #6b9edb, #3a6fb0); overflow-y: auto; flex-shrink: 0; padding: 4px; }
 .xp-content-pane { flex: 1; background: #fff; overflow-y: auto; padding: 12px; }
+=======
+.xp-main-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+.xp-sidebar { width: 200px; background: linear-gradient(180deg, #6b9edb, #3a6fb0); overflow-y: auto; flex-shrink: 0; padding: 4px; }
+.xp-content-pane { flex: 1; background: #fff; overflow-y: auto; padding: 12px; min-height: 0; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
 /* ===== SIDEBAR ===== */
 .sidebar-group { margin-bottom: 8px; }
@@ -113,6 +131,7 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .xp-mini-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; width: 20px; height: 20px; cursor: pointer; border-radius: 2px; font-size: 14px; display: flex; align-items: center; justify-content: center; }
 .playlist-header-wrapper { display: flex; justify-content: space-between; align-items: center; }
 
+<<<<<<< HEAD
 /* Friend Activity */
 .friend-row { display: flex; align-items: center; gap: 6px; }
 .status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
@@ -122,6 +141,8 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .friend-name { color: white; font-weight: bold; }
 .friend-song { color: #c0d0e0; font-size: 10px; padding-left: 16px; margin-bottom: 4px; }
 
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 /* ===== CONTENT VIEWS ===== */
 .content-view { display: block; }
 
@@ -129,12 +150,18 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .welcome-banner { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); padding: 16px; border-radius: 4px; margin-bottom: 16px; border: 1px solid #a5d6a7; }
 .welcome-banner h3 { color: #2e7d32; margin-bottom: 4px; }
 .home-grid { display: flex; flex-direction: column; gap: 12px; }
+<<<<<<< HEAD
 .home-row { display: flex; gap: 12px; }
 .home-card { flex: 1; }
+=======
+.home-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.home-card { flex: 1; min-width: 280px; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .home-card.full-width { flex-basis: 100%; }
 .xp-panel { border: 1px solid #aca899; background: #fff; border-radius: 2px; }
 .xp-panel-header { background: linear-gradient(180deg, #f0eeE4, #ddd8c8); padding: 4px 8px; font-weight: bold; font-size: 11px; border-bottom: 1px solid #aca899; }
 .xp-panel-body { padding: 8px; }
+<<<<<<< HEAD
 .featured-album-body { display: flex; gap: 12px; }
 .featured-cover-container { width: 120px; height: 120px; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
 .cd-vinyl { width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #333 30%, #111 60%, #333 100%); border: 2px solid #555; }
@@ -144,6 +171,10 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .price-tag { color: #d32f2f; font-weight: bold; }
 .featured-actions { display: flex; gap: 8px; margin-top: 8px; }
 .quick-actions-body { display: flex; flex-direction: column; gap: 4px; }
+=======
+.quick-actions-body { display: flex; flex-direction: column; gap: 4px; }
+.stats-card p { margin: 4px 0; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
 /* ===== TABLES ===== */
 .xp-table { width: 100%; border-collapse: collapse; font-size: 11px; }
@@ -153,6 +184,7 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .xp-table tr:hover { background: #e8f0ff; }
 .xp-table tr.selected { background: var(--xp-selection-bg); color: white; }
 .xp-table tr.active-track { font-weight: bold; color: #1DB954; }
+<<<<<<< HEAD
 .table-container { max-height: 400px; overflow-y: auto; }
 
 /* ===== TOP DOWNLOADS LIST ===== */
@@ -210,6 +242,60 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 /* ===== PLAYER BAR ===== */
 .xp-player-bar { background: linear-gradient(180deg, #e8e4d8, #d4d0c4); border-top: 2px solid #fff; display: flex; align-items: center; padding: 4px 8px; gap: 8px; flex-shrink: 0; min-height: 64px; }
 .player-track-info { display: flex; align-items: center; gap: 8px; min-width: 200px; }
+=======
+.table-container { overflow: auto; max-height: 400px; }
+.library-cover { flex-shrink: 0; }
+
+/* ===== LIBRARY TOOLBAR ===== */
+.library-toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; padding: 4px; background: #f8f6ee; border-radius: 4px; flex-wrap: wrap; }
+.lib-search-box { margin-left: auto; }
+.lib-search-box input { border: 1px solid #7f9db9; padding: 3px 6px; width: 180px; font-family: var(--xp-font); }
+.upload-panel { display: flex; align-items: center; gap: 8px; }
+
+/* ===== PLAYLIST VIEW ===== */
+.playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.playlist-meta-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* Playlist List View */
+.playlist-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.playlist-card { cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+.playlist-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-color: var(--xp-selection-bg); }
+.playlist-card.active { border: 2px solid var(--xp-selection-bg); }
+.playlist-card-header { display: flex; gap: 12px; padding: 8px; }
+.playlist-cover { width: 60px; height: 60px; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; overflow: hidden; }
+.playlist-cover img { width: 100%; height: 100%; object-fit: cover; }
+.playlist-card-info { flex: 1; min-width: 0; }
+.playlist-card-info h4 { margin: 0 0 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.playlist-card-info p { margin: 2px 0; font-size: 10px; color: #666; }
+.playlist-date { color: #999 !important; font-size: 10px; }
+.playlist-card-actions { display: flex; gap: 4px; padding: 0 8px 8px; border-top: 1px solid #e0ddd0; }
+.empty-state { text-align: center; padding: 40px 20px; }
+.empty-state .xp-panel-body { padding: 40px 20px; }
+
+/* Playlist Detail View */
+.playlist-songs { margin-top: 8px; }
+
+/* ===== LIBRARY ACTION MENU ===== */
+.track-actions { display: flex; align-items: center; gap: 4px; }
+.action-menu-btn { width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; }
+.action-menu { position: absolute; top: 100%; right: 0; background: white; border: 1px solid #848484; box-shadow: 2px 2px 4px rgba(0,0,0,0.2); min-width: 160px; z-index: 1000; padding: 2px 0; }
+.action-menu-item { padding: 4px 12px; cursor: pointer; font-size: 11px; white-space: nowrap; }
+.action-menu-item:hover { background: var(--xp-selection-bg); color: white; }
+.action-menu-item.danger { color: #d32f2f; }
+
+/* ===== RECENTLY PLAYED ===== */
+.recently-played-card .xp-table td:last-child { color: #666; font-size: 10px; }
+
+/* ===== MODAL ADJUSTMENTS FOR NEW MODALS ===== */
+.playlist-checkbox-item { display: flex; align-items: center; gap: 8px; padding: 8px; cursor: pointer; border-bottom: 1px solid #e0ddd0; }
+.playlist-checkbox-item input { margin-right: 8px; }
+.playlist-checkbox-item:hover { background: #f0f4ff; }
+
+/* ===== PLAYER BAR ===== */
+.xp-player-bar { background: linear-gradient(180deg, #e8e4d8, #d4d0c4); border-top: 2px solid #fff; display: flex; align-items: center; padding: 4px 8px; gap: 8px; flex-shrink: 0; min-height: 64px; flex-wrap: wrap; }
+.player-track-info { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 100%; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .mini-album-art { width: 40px; height: 40px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; flex-shrink: 0; }
 .mini-track-meta { display: flex; flex-direction: column; gap: 1px; }
 .track-title { font-weight: bold; font-size: 11px; }
@@ -218,11 +304,20 @@ body { font-family: var(--xp-font); font-size: 11px; color: #000; background: va
 .track-extra .divider { color: #ccc; }
 .rating-stars { cursor: pointer; color: #ffb300; letter-spacing: 1px; }
 
+<<<<<<< HEAD
 .player-controls-panel { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 2px; }
 .player-buttons { display: flex; gap: 4px; }
 .player-btn { width: 30px; height: 26px; border: 1px solid #848484; border-radius: 3px; background: linear-gradient(180deg, #fff, #ddd8c8); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
 .player-btn:hover { background: linear-gradient(180deg, #fff, #ccc8b8); }
 .player-btn.primary { width: 36px; background: linear-gradient(180deg, #d0f0d0, #80c080); }
+=======
+.player-controls-panel { display: flex; flex-direction: column; align-items: center; flex: 1 1 100%; gap: 2px; }
+.player-buttons { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.player-btn { width: 30px; height: 26px; border: 1px solid #848484; border-radius: 3px; background: linear-gradient(180deg, #fff, #ddd8c8); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.player-btn:hover { background: linear-gradient(180deg, #fff, #ccc8b8); }
+.player-btn.primary { width: 36px; background: linear-gradient(180deg, #d0f0d0, #80c080); }
+.player-btn.active { background: linear-gradient(180deg, #a8d0a8, #60a060); border-color: #408040; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
 .player-timeline-wrapper { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 400px; }
 .time-elapsed, .time-total { font-size: 10px; color: #333; min-width: 30px; text-align: center; }
@@ -231,20 +326,34 @@ input[type="range"] { width: 100%; height: 16px; -webkit-appearance: none; backg
 input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: linear-gradient(180deg, #888, #bbb); border: 1px solid #666; border-radius: 2px; }
 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 18px; background: linear-gradient(180deg, #fff, #ccc); border: 1px solid #666; border-radius: 2px; margin-top: -7px; cursor: pointer; }
 
+<<<<<<< HEAD
 .player-utils-panel { display: flex; align-items: center; gap: 8px; }
 .player-icon-btn { background: none; border: 1px solid transparent; padding: 4px 8px; cursor: pointer; font-family: var(--xp-font); font-size: 10px; border-radius: 3px; }
 .player-icon-btn:hover { border-color: #b0a888; background: #f0eed8; }
 .player-volume-wrapper { display: flex; align-items: center; gap: 4px; }
+=======
+.player-utils-panel { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; justify-content: space-between; }
+.player-icon-btn { background: none; border: 1px solid transparent; padding: 4px 8px; cursor: pointer; font-family: var(--xp-font); font-size: 10px; border-radius: 3px; }
+.player-icon-btn:hover { border-color: #b0a888; background: #f0eed8; }
+.player-volume-wrapper { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: flex-end; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .speaker-icon { font-size: 14px; }
 .player-volume-slider { width: 80px; }
 
 /* ===== MODALS ===== */
 .xp-modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); }
+<<<<<<< HEAD
 .dialog-window { min-width: 400px; max-width: 700px; max-height: 80vh; }
 .eq-window { width: 560px; }
 .visualizer-window { width: 660px; }
 .burner-window { width: 500px; }
 .sync-window { width: 600px; }
+=======
+.dialog-window { min-width: 400px; max-width: 700px; max-height: 80vh; width: calc(100% - 24px); }
+.eq-window { width: 560px; }
+.visualizer-window { width: 660px; }
+.burner-window { width: 500px; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .prefs-window { width: 550px; }
 .props-window { width: 400px; }
 .lyrics-window { width: 400px; }
@@ -253,8 +362,13 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12p
 
 /* ===== EQ ===== */
 .eq-body { padding: 12px; }
+<<<<<<< HEAD
 .eq-controls-top { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
 .eq-sliders-container { display: flex; gap: 8px; justify-content: center; }
+=======
+.eq-controls-top { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.eq-sliders-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .eq-channel-strip { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .slider-track-vert { height: 120px; display: flex; align-items: center; justify-content: center; }
 .slider-track-vert input[type="range"] { writing-mode: vertical-lr; direction: rtl; width: 16px; height: 120px; }
@@ -263,7 +377,11 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12p
 
 /* ===== VISUALIZER ===== */
 .visualizer-body { padding: 8px; }
+<<<<<<< HEAD
 .vis-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+=======
+.vis-controls { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .canvas-container { background: #000; border: 2px inset #848484; }
 #visualizer-canvas { display: block; }
 
@@ -275,6 +393,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12p
 .rotate-slow { animation: spin 4s linear infinite; display: inline-block; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .drive-tray-label { color: #666; margin-top: 8px; }
+<<<<<<< HEAD
 .burner-actions { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
 .burner-disc-estimate { margin-top: 12px; font-size: 11px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -295,11 +414,25 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12p
 .prefs-body { padding: 12px; }
 .xp-tabs { }
 .xp-tab-headers { display: flex; gap: 2px; margin-bottom: 12px; }
+=======
+.burner-actions { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.burner-disc-estimate { margin-top: 12px; font-size: 11px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* ===== PREFERENCES ===== */
+.prefs-body { padding: 12px; }
+.xp-tabs { }
+.xp-tab-headers { display: flex; gap: 2px; margin-bottom: 12px; flex-wrap: wrap; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 .xp-tab-btn { padding: 4px 12px; background: #e0ddd0; border: 1px solid #aca899; border-bottom: none; cursor: pointer; border-radius: 4px 4px 0 0; font-family: var(--xp-font); font-size: 11px; }
 .xp-tab-btn.active { background: white; font-weight: bold; border-bottom: 1px solid white; margin-bottom: -1px; }
 .xp-tab-content { display: none; padding: 12px; border: 1px solid #aca899; background: white; min-height: 200px; }
 .xp-tab-content.active { display: block; }
+<<<<<<< HEAD
 .prefs-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+=======
+.prefs-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
 /* ===== PROPERTIES ===== */
 .props-body { padding: 12px; }
@@ -333,7 +466,54 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12p
 .context-item:hover .context-submenu { display: block; }
 .xp-context-menu hr { border: none; border-top: 1px solid #ccc; margin: 2px 0; }
 
+<<<<<<< HEAD
+=======
+/* ===== SHUTDOWN OVERLAY ===== */
+.xp-shutdown-overlay { position: fixed; inset: 0; background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; font-family: Tahoma, sans-serif; font-size: 18px; }
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 /* ===== THEME VARIANTS ===== */
 .theme-luna-olive { --xp-blue-title: linear-gradient(180deg, #6e8e38 0%, #98b85a 10%, #7ea040 30%, #5e8028 60%, #4a6820 100%); --xp-blue-bg: #6b8e4e; }
 .theme-luna-silver { --xp-blue-title: linear-gradient(180deg, #888 0%, #bbb 10%, #999 30%, #777 60%, #666 100%); --xp-blue-bg: #888; }
 .theme-retro-classic { --xp-blue-title: linear-gradient(180deg, #808080, #a0a0a0); --xp-blue-bg: #008080; }
+<<<<<<< HEAD
+=======
+
+/* ===== RESPONSIVE: MOBILE (max-width: 768px) ===== */
+@media (max-width: 768px) {
+  body { overflow: auto; }
+  .main-window { position: absolute; inset: 0; }
+  .xp-menubar { overflow-x: auto; }
+  .xp-toolbar { flex-wrap: wrap; }
+  .xp-toolbar-buttons { order: 2; width: 100%; overflow-x: auto; flex-wrap: nowrap; }
+  .xp-toolbar-search { margin-left: 0; width: 100%; order: 3; }
+  .xp-toolbar-search input { flex: 1; width: auto; }
+  .xp-main-body { display: block; overflow: hidden; }
+  .xp-sidebar { display: none; }
+  .xp-content-pane { width: 100%; padding: 8px; }
+  .xp-player-bar { flex-wrap: wrap; min-height: 100px; }
+  .player-track-info { min-width: 0; flex: 1 1 100%; order: 1; }
+  .player-controls-panel { flex: 1 1 100%; order: 2; }
+  .player-utils-panel { flex: 1 1 100%; order: 3; justify-content: space-between; }
+  .player-volume-wrapper { flex: 1; justify-content: flex-end; }
+  .player-volume-slider { width: 100px; }
+  .xp-table { min-width: 700px; }
+  .table-container { overflow-x: auto; }
+  .login-window { width: calc(100% - 24px); }
+  .splash-box { padding: 20px; width: 100%; }
+  .xp-progress-bar { width: min(300px, 80vw); }
+  .dialog-window { min-width: 0; width: calc(100% - 24px); max-height: 90vh; }
+  .home-row { flex-direction: column; }
+  .home-card { min-width: 0; }
+  .library-toolbar { flex-direction: column; align-items: stretch; }
+  .lib-search-box { margin-left: 0; width: 100%; }
+  .lib-search-box input { width: 100%; }
+  .upload-panel { justify-content: center; }
+  .playlist-header { flex-direction: column; align-items: flex-start; }
+  .playlist-meta-actions { width: 100%; justify-content: space-between; }
+  .playlist-grid { grid-template-columns: 1fr; }
+  .track-actions { flex-wrap: wrap; }
+  .action-menu { right: -100px; min-width: 180px; }
+  .xp-storage-error-toast { left: 10px; right: 10px; transform: none; max-width: none; }
+}
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)

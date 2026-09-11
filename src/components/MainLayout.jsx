@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+<<<<<<< HEAD
 import useStore, { SPEED_PROFILES } from '../store/useStore';
 import HomeView from './views/HomeView';
 import StoreView from './views/StoreView';
@@ -19,6 +20,19 @@ export default function MainLayout() {
   const [showShutdown, setShowShutdown] = useState(false);
 
   // Close context menu on any click
+=======
+import useStore from '../store/useStore';
+import HomeView from './views/HomeView';
+import LibraryView from './views/LibraryView';
+import PlaylistsView from './views/PlaylistsView';
+import PlayerBar from './PlayerBar';
+import { EQModal, VisualizerModal, CDBurnerModal, PreferencesModal, PropertiesModal, AboutModal, ConfirmModal, AddToPlaylistModal, EditDetailsModal, StorageErrorToast } from './modals/Modals';
+
+export default function MainLayout() {
+  const audioRef = useRef(null);
+  const [showShutdown, setShowShutdown] = useState(false);
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   useEffect(() => {
     const handler = () => {
       const menu = document.getElementById('custom-context-menu');
@@ -27,20 +41,78 @@ export default function MainLayout() {
     document.addEventListener('click', handler);
     return () => document.removeEventListener('click', handler);
   }, []);
+<<<<<<< HEAD
   const {
     currentView, navigateTo, goBack, connectionSpeed, userName, walletBalance, downloads,
     playlists, openModal, closeModal, showConfirm, createPlaylist, setActivePlaylist,
     historyIndex, searchQuery, setSearchQuery, allSongs, library, setCurrentSong, setIsPlaying, setRightClickedTrack, addToPlaylist
+=======
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger shortcuts when typing in inputs
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+      
+      const state = useStore.getState();
+      const audio = audioRef.current;
+      
+      switch (e.key) {
+        case ' ':
+          e.preventDefault(); // prevent page scroll
+          if (state.currentSong) {
+            state.setIsPlaying(!state.isPlaying);
+          } else if (state.library.length > 0) {
+            state.setCurrentSong(state.library[0]);
+            state.setIsPlaying(true);
+          }
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (audio) audio.currentTime = Math.max(0, audio.currentTime - 5);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          if (audio) audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 5);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (audio) audio.volume = Math.min(1, audio.volume + 0.1);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (audio) audio.volume = Math.max(0, audio.volume - 0.1);
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [audioRef]);
+
+  const {
+    currentView, navigateTo, goBack, userName,
+    playlists, openModal, closeModal, showConfirm, createPlaylist, setActivePlaylist,
+    historyIndex, searchQuery, setSearchQuery, allSongs, library, setCurrentSong, setIsPlaying, setRightClickedTrack, addToPlaylist, removeFromLibrary
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   } = useStore();
 
   const [searchText, setSearchText] = useState('');
 
+<<<<<<< HEAD
   const speedProfile = SPEED_PROFILES[connectionSpeed] || SPEED_PROFILES.dsl;
   const isOffline = connectionSpeed === 'offline';
 
   const handleSearch = () => {
     if (!searchText.trim()) return;
     navigateTo('store');
+=======
+  const handleSearch = () => {
+    if (!searchText.trim()) return;
+    navigateTo('library');
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     setSearchQuery(searchText.toLowerCase());
   };
 
@@ -56,8 +128,11 @@ export default function MainLayout() {
     const trackId = state.rightClickedTrackId;
     const track = state.library.find(t => t.id === trackId);
     if (action === 'play' && track) { setCurrentSong(track); setIsPlaying(true); }
+<<<<<<< HEAD
     if (action === 'queue' && track) showConfirm("Queue", `"${track.title}" added to queue.`, null);
     if (action === 'burn') openModal('cdBurner');
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     if (action === 'properties' && track) openModal('properties');
     if (action === 'delete' && track) showConfirm("Delete", `Delete "${track.title}"?`, () => useStore.getState().removeFromLibrary(track.id));
   };
@@ -67,6 +142,7 @@ export default function MainLayout() {
     setShowShutdown(true);
   };
 
+<<<<<<< HEAD
   const renderView = () => {
     switch (currentView) {
       case 'home': return <HomeView />;
@@ -74,6 +150,16 @@ export default function MainLayout() {
       case 'albumDetails': return <AlbumDetailsView />;
       case 'library': return <LibraryView />;
       case 'downloads': return <DownloadsView />;
+=======
+  const handleExit = () => {
+    showConfirm("Exit", "Close MyJukeBox?", () => setShowShutdown(true));
+  };
+
+  const renderView = () => {
+    switch (currentView) {
+      case 'home': return <HomeView />;
+      case 'library': return <LibraryView />;
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
       case 'playlists': return <PlaylistsView />;
       default: return <HomeView />;
     }
@@ -81,29 +167,52 @@ export default function MainLayout() {
 
   return (
     <>
+<<<<<<< HEAD
       <div className="main-window xp-window" style={{ display: 'flex', flexDirection: 'column' }}>
         {/* Title Bar */}
         <div className="xp-titlebar">
           <span className="xp-titlebar-text">
             <svg viewBox="0 0 100 100" className="xp-window-icon"><circle cx="50" cy="50" r="45" fill="#1DB954"/><path d="M25,35 Q50,20 75,35 M30,50 Q50,38 70,50 M35,65 Q50,55 65,65" stroke="white" strokeWidth="8" fill="none" strokeLinecap="round"/></svg>
             Spotify 2006 - Local Library & Store Edition
+=======
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <div className="main-window xp-window" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="xp-titlebar">
+          <span className="xp-titlebar-text">
+            <img className="xp-window-icon" src="/favicon.svg" alt="MyJukeBox" />
+            MyJukeBox - Your personal MP3 space
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
           </span>
           <div className="xp-titlebar-controls">
             <button className="xp-btn-min">&#9584;</button>
             <button className="xp-btn-max" disabled>&#9633;</button>
+<<<<<<< HEAD
             <button className="xp-btn-close" onClick={() => showConfirm("Exit", "Close Spotify 2006?", () => { document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:100px'><h3>Spotify Session Closed.</h3></div>"; })}>&times;</button>
           </div>
         </div>
 
         {/* Menu Bar */}
+=======
+            <button className="xp-btn-close" onClick={handleExit}>&times;</button>
+          </div>
+        </div>
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <div className="xp-menubar">
           <div className="xp-menu-item"><span>File</span>
             <div className="xp-dropdown-menu">
               <div className="xp-dropdown-item" onClick={() => openModal('cdBurner')}>Import Audio CD...</div>
+<<<<<<< HEAD
               <div className="xp-dropdown-item" onClick={() => showConfirm("Import", "Scanning directory...", () => { const s = { id: 100+library.length, file:`/songs/8.mp3`, title:"Imported Track", artist:"Various", album:"Imported Hits", year:2006, duration:"3:38", size:"4.5 MB", bitrate:"128 kbps", genre:"Various", rating:3, playCount:1, coverColor:"#9e9e9e" }; useStore.getState().addToLibrary(s); })}>Add Files to Library...</div>
               <div className="xp-dropdown-item" onClick={handleNewPlaylist}>New Playlist (Ctrl+N)</div>
               <hr />
               <div className="xp-dropdown-item" onClick={() => { window.playErrorSound?.(); showConfirm("Exit", "Close Spotify?", () => {}); }}>Exit</div>
+=======
+              <div className="xp-dropdown-item" onClick={() => navigateTo('library')}>Add Files to Library...</div>
+              <div className="xp-dropdown-item" onClick={handleNewPlaylist}>New Playlist (Ctrl+N)</div>
+              <hr />
+              <div className="xp-dropdown-item" onClick={handleExit}>Exit</div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
               <hr />
               <div className="xp-dropdown-item" onClick={handleShutdown} style={{ fontWeight: 'bold', color: '#003399' }}>Shut Down...</div>
             </div>
@@ -116,8 +225,13 @@ export default function MainLayout() {
           <div className="xp-menu-item"><span>View</span>
             <div className="xp-dropdown-menu">
               <div className="xp-dropdown-item" onClick={() => navigateTo('home')}>Go to Home</div>
+<<<<<<< HEAD
               <div className="xp-dropdown-item" onClick={() => navigateTo('store')}>Go to Store</div>
               <div className="xp-dropdown-item" onClick={() => navigateTo('library')}>Go to Library</div>
+=======
+              <div className="xp-dropdown-item" onClick={() => navigateTo('library')}>Go to Library</div>
+              <div className="xp-dropdown-item" onClick={() => navigateTo('playlists')}>Go to Playlists</div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
               <hr />
               <div className="xp-dropdown-item" onClick={() => openModal('visualizer')}>Visualizer Window</div>
               <div className="xp-dropdown-item" onClick={() => openModal('eq')}>Equalizer Window</div>
@@ -132,11 +246,16 @@ export default function MainLayout() {
           <div className="xp-menu-item"><span>Tools</span>
             <div className="xp-dropdown-menu">
               <div className="xp-dropdown-item" onClick={() => openModal('cdBurner')}>CD Burner...</div>
+<<<<<<< HEAD
               <div className="xp-dropdown-item" onClick={() => openModal('deviceSync')}>Device Sync...</div>
+=======
+              <div className="xp-dropdown-item" onClick={() => openModal('preferences')}>Preferences...</div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
             </div>
           </div>
           <div className="xp-menu-item"><span>Help</span>
             <div className="xp-dropdown-menu">
+<<<<<<< HEAD
               <div className="xp-dropdown-item" onClick={() => openModal('about')}>About Spotify 2006</div>
             </div>
           </div>
@@ -144,12 +263,20 @@ export default function MainLayout() {
         </div>
 
         {/* Toolbar */}
+=======
+              <div className="xp-dropdown-item" onClick={() => openModal('about')}>About MyJukeBox</div>
+            </div>
+          </div>
+        </div>
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <div className="xp-toolbar">
           <div className="xp-toolbar-buttons">
             <button className="xp-toolbar-btn" onClick={(e) => { if (historyIndex <= 0) { window.playErrorSound?.(); } else { goBack(); } }} disabled={historyIndex <= 0}><span className="icon">&larr;</span> Back</button>
             <div className="xp-toolbar-divider"></div>
             <button className={`xp-toolbar-btn ${currentView === 'home' ? 'active' : ''}`} onClick={() => navigateTo('home')}><span className="icon">&#127968;</span> Home</button>
             <button className={`xp-toolbar-btn ${currentView === 'library' ? 'active' : ''}`} onClick={() => navigateTo('library')}><span className="icon">&#128193;</span> Library</button>
+<<<<<<< HEAD
             <button className={`xp-toolbar-btn ${['store', 'albumDetails'].includes(currentView) ? 'active' : ''}`} onClick={(e) => { if (isOffline) { window.playErrorSound?.(); } else { navigateTo('store'); } }} disabled={isOffline}><span className="icon">💸</span> Store</button>
                 <button className={`xp-toolbar-btn ${currentView === 'downloads' ? 'active' : ''}`} onClick={() => navigateTo('downloads')}><span className="icon">📥</span> Downloads {downloads.length > 0 && <span className="badge">{downloads.length}</span>}</button>
                 <button className="xp-toolbar-btn" onClick={() => openModal('deviceSync')}><span className="icon">🔄</span> Sync</button>
@@ -160,10 +287,18 @@ export default function MainLayout() {
           </div>
           <div className="xp-toolbar-search">
             <input type="text" placeholder="Search Store or Library..." value={searchText} onChange={e => setSearchText(e.target.value)} onKeyPress={e => { if (e.key === 'Enter') handleSearch(); }} />
+=======
+            <button className={`xp-toolbar-btn ${currentView === 'playlists' ? 'active' : ''}`} onClick={() => navigateTo('playlists')}><span className="icon">&#9834;</span> Playlists</button>
+            <div className="xp-toolbar-divider"></div>
+          </div>
+          <div className="xp-toolbar-search">
+            <input type="text" placeholder="Search Library..." value={searchText} onChange={e => setSearchText(e.target.value)} onKeyPress={e => { if (e.key === 'Enter') handleSearch(); }} />
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
             <button className="xp-button search-btn" onClick={handleSearch}>Find</button>
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Main Body: Sidebar + Content */}
         <div className="xp-main-body" style={{ flex: 1 }}>
           {/* Sidebar */}
@@ -182,6 +317,16 @@ export default function MainLayout() {
               <ul className="sidebar-list">
                 <li className="sidebar-item" onClick={() => navigateTo('store')} style={{ opacity: isOffline ? 0.5 : 1 }}><span className="icon">&#128184;</span> Store Front</li>
                 <li className="sidebar-item"><span className="icon">&#128091;</span> Balance: <strong>${walletBalance.toFixed(2)}</strong></li>
+=======
+        <div className="xp-main-body" style={{ flex: 1 }}>
+          <div className="xp-sidebar">
+            <div className="sidebar-group">
+              <div className="sidebar-header">My Music</div>
+              <ul className="sidebar-list">
+                <li className="sidebar-item" onClick={() => navigateTo('home')}><span className="icon">&#127968;</span> Home</li>
+                <li className="sidebar-item" onClick={() => navigateTo('library')}><span className="icon">&#128193;</span> Library</li>
+                <li className="sidebar-item" onClick={() => navigateTo('playlists')}><span className="icon">&#9834;</span> Playlists</li>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
               </ul>
             </div>
             <div className="sidebar-group">
@@ -198,6 +343,7 @@ export default function MainLayout() {
               </ul>
             </div>
             <div className="sidebar-group">
+<<<<<<< HEAD
               <div className="sidebar-header">Hardware</div>
               <ul className="sidebar-list">
                 <li className="sidebar-item" onClick={() => openModal('cdBurner')}><span className="icon">&#128191;</span> CD Burner</li>
@@ -207,11 +353,17 @@ export default function MainLayout() {
             <div className="sidebar-group">
               <div className="sidebar-header">Tools</div>
               <ul className="sidebar-list">
+=======
+              <div className="sidebar-header">Tools</div>
+              <ul className="sidebar-list">
+                <li className="sidebar-item" onClick={() => openModal('cdBurner')}><span className="icon">&#128191;</span> CD Burner</li>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
                 <li className="sidebar-item" onClick={() => openModal('eq')}><span className="icon">&#127915;</span> 10-Band EQ</li>
                 <li className="sidebar-item" onClick={() => openModal('visualizer')}><span className="icon">&#127916;</span> Visualizer</li>
                 <li className="sidebar-item" onClick={() => openModal('preferences')}><span className="icon">&#128295;</span> Preferences</li>
               </ul>
             </div>
+<<<<<<< HEAD
             <div className="sidebar-group">
               <div className="sidebar-header">Friend Activity</div>
               <ul className="sidebar-list">
@@ -232,11 +384,16 @@ export default function MainLayout() {
           </div>
 
           {/* Content Pane */}
+=======
+          </div>
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
           <div className="xp-content-pane" id="main-content-pane">
             {renderView()}
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Player Bar */}
         <PlayerBar audioRef={audioRef} />
       </div>
@@ -248,6 +405,15 @@ export default function MainLayout() {
       <div className="xp-context-menu hidden" id="custom-context-menu">
         <div className="context-item" onClick={() => handleContextAction('play')}>Play</div>
         <div className="context-item" onClick={() => handleContextAction('queue')}>Add to Queue</div>
+=======
+        <PlayerBar audioRef={audioRef} />
+      </div>
+
+      <audio ref={audioRef} id="main-audio" preload="auto"></audio>
+
+      <div className="xp-context-menu hidden" id="custom-context-menu">
+        <div className="context-item" onClick={() => handleContextAction('play')}>Play</div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <div className="context-item" onClick={() => {
           const state = useStore.getState();
           const submenu = document.getElementById('ctx-playlists-submenu');
@@ -272,6 +438,7 @@ export default function MainLayout() {
         <div className="context-item delete" onClick={() => handleContextAction('delete')}>Delete Track</div>
       </div>
 
+<<<<<<< HEAD
       {/* Shutdown Overlay */}
       {showShutdown && (
         <div className="xp-shutdown-overlay" style={{
@@ -300,20 +467,41 @@ export default function MainLayout() {
               style={{ padding: '10px 30px', fontSize: '14px' }}
             >
               Close Window
+=======
+      {showShutdown && (
+        <div className="xp-shutdown-overlay">
+          <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px' }}>⚠</div>
+            <h2 style={{ margin: '0 0 20px', fontWeight: 'normal' }}>It's now safe to turn off your computer.</h2>
+            <p style={{ margin: '0 0 30px', color: '#aaa' }}>MyJukeBox has been shut down.</p>
+            <button
+              onClick={() => setShowShutdown(false)}
+              className="xp-button primary"
+              style={{ padding: '10px 30px', fontSize: '14px' }}
+            >
+              Return
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
             </button>
           </div>
         </div>
       )}
 
+<<<<<<< HEAD
       {/* All Modals */}
       <EQModal />
       <VisualizerModal />
       <CDBurnerModal />
       <DeviceSyncModal />
+=======
+      <EQModal />
+      <VisualizerModal />
+      <CDBurnerModal />
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
       <PreferencesModal />
       <PropertiesModal />
       <AboutModal />
       <ConfirmModal />
+<<<<<<< HEAD
       <DJChatWindow />
       <MoodMixerDialog />
       <GuestbookModal />
@@ -364,3 +552,11 @@ export default function MainLayout() {
     </>
   );
 }
+=======
+      <AddToPlaylistModal />
+      <EditDetailsModal />
+      <StorageErrorToast />
+    </>
+  );
+}
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)

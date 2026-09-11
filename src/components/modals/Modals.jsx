@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import { useState, useRef, useEffect, useCallback } from 'react';
 import useStore, { SPEED_PROFILES } from '../../store/useStore';
 import { EQ_FREQUENCIES, EQ_PRESETS, setEQGain, applyPreset, getEQGains } from '../../audio/audioEngine';
 import { startVisualizer, stopVisualizer, setVisualizerMode } from '../../audio/visualizer';
 import DJChatWindow from '../DJChatWindow';
+=======
+import { useState, useRef, useEffect } from 'react';
+import useStore from '../../store/useStore';
+import { EQ_FREQUENCIES, EQ_PRESETS, setEQGain, applyPreset, getEQGains } from '../../audio/audioEngine';
+import { startVisualizer, stopVisualizer, setVisualizerMode } from '../../audio/visualizer';
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
 const EQ_LABELS = ['60Hz', '170Hz', '310Hz', '600Hz', '1K', '3K', '6K', '12K', '14K', '16K'];
 
@@ -118,14 +125,24 @@ export function VisualizerModal() {
 }
 
 export function CDBurnerModal() {
+<<<<<<< HEAD
   const { playlists, allSongs, openModal, closeModal, showConfirm } = useStore();
+=======
+  const { playlists, library, allSongs, openModal, closeModal, showConfirm } = useStore();
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   const [step, setStep] = useState(1);
   const [selectedPl, setSelectedPl] = useState(0);
   const [burnSpeed, setBurnSpeed] = useState('16');
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef(null);
 
+<<<<<<< HEAD
   const tracks = playlists.find(p => p.id === selectedPl)?.tracks.map(id => allSongs.find(s => s.id === id)).filter(Boolean) || [];
+=======
+  const trackById = new Map();
+  [...library, ...allSongs].forEach(t => { if (!trackById.has(t.id)) trackById.set(t.id, t); });
+  const tracks = playlists.find(p => p.id === selectedPl)?.tracks.map(id => trackById.get(id)).filter(Boolean) || [];
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
   const startBurn = () => {
     if (!tracks.length) { showConfirm("Empty", "Select a playlist with tracks.", null); return; }
@@ -150,7 +167,11 @@ export function CDBurnerModal() {
   };
 
   return (
+<<<<<<< HEAD
     <Modal id="cdBurner" title="Windows Audio CD Burner Wizard" className="burner-window">
+=======
+    <Modal id="cdBurner" title="MyJukeBox CD Burner" className="burner-window">
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
       <div className="burner-body">
         {step === 1 && (
           <div className="burner-step">
@@ -184,6 +205,7 @@ export function CDBurnerModal() {
   );
 }
 
+<<<<<<< HEAD
 export function DeviceSyncModal() {
   const { playlists, closeModal, showConfirm } = useStore();
   const [syncing, setSyncing] = useState(false);
@@ -241,17 +263,27 @@ export function DeviceSyncModal() {
   );
 }
 
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 export function PreferencesModal() {
   const { activeTheme, setTheme, closeModal } = useStore();
   const [tab, setTab] = useState('tab-general');
   const [theme, setLocalTheme] = useState(activeTheme);
 
   const apply = () => setTheme(theme);
+<<<<<<< HEAD
   const tabs = ['tab-general', 'tab-playback', 'tab-downloads', 'tab-devices', 'tab-internet', 'tab-appearance'];
   const tabLabels = ['General', 'Playback', 'Downloads', 'Devices', 'Internet', 'Appearance'];
 
   return (
     <Modal id="preferences" title="Spotify Preferences" className="prefs-window">
+=======
+  const tabs = ['tab-general', 'tab-playback', 'tab-appearance'];
+  const tabLabels = ['General', 'Playback', 'Appearance'];
+
+  return (
+    <Modal id="preferences" title="MyJukeBox Preferences" className="prefs-window">
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
       <div className="prefs-body">
         <div className="xp-tabs">
           <div className="xp-tab-headers">
@@ -259,7 +291,11 @@ export function PreferencesModal() {
           </div>
           <div className={`xp-tab-content ${tab === 'tab-general' ? 'active' : ''}`} id="tab-general">
             <h4>Startup Options</h4>
+<<<<<<< HEAD
             <div className="checkbox-group"><input type="checkbox" defaultChecked id="pref-launch" /><label htmlFor="pref-launch">Launch Spotify on startup</label></div>
+=======
+            <div className="checkbox-group"><input type="checkbox" defaultChecked id="pref-launch" /><label htmlFor="pref-launch">Launch MyJukeBox on startup</label></div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
             <div className="checkbox-group"><input type="checkbox" id="pref-tray" /><label htmlFor="pref-tray">Minimize to system tray</label></div>
             <hr /><h4>Language</h4>
             <div className="form-group"><label>Language:</label><select defaultValue="en"><option value="en">English</option><option value="es">Español</option><option value="de">Deutsch</option></select></div>
@@ -269,6 +305,7 @@ export function PreferencesModal() {
             <div className="form-group"><label>Output:</label><select defaultValue="primary"><option value="primary">Primary Sound Driver</option><option>DirectSound: Realtek AC97</option></select></div>
             <div className="form-group"><label>Buffer:</label><select defaultValue="2000"><option>500ms</option><option>1000ms</option><option>2000ms</option><option>5000ms</option></select></div>
           </div>
+<<<<<<< HEAD
           <div className={`xp-tab-content ${tab === 'tab-downloads' ? 'active' : ''}`}>
             <h4>Storage</h4>
             <div className="form-group"><label>Cache Dir:</label><input type="text" defaultValue="C:\Program Files\Spotify\Downloads" style={{width:'100%'}} /></div>
@@ -281,6 +318,8 @@ export function PreferencesModal() {
             <h4>Proxy Settings</h4>
             <div className="checkbox-group"><input type="checkbox" id="pref-proxy" /><label htmlFor="pref-proxy">Use proxy server</label></div>
           </div>
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
           <div className={`xp-tab-content ${tab === 'tab-appearance' ? 'active' : ''}`}>
             <h4>Themes</h4>
             <div className="form-group"><label>Visual Style:</label>
@@ -308,12 +347,23 @@ export function PropertiesModal() {
   const track = library.find(t => t.id === rightClickedTrackId) || allSongs.find(t => t.id === rightClickedTrackId);
   if (!track) return null;
 
+<<<<<<< HEAD
+=======
+  const isLocal = track.local;
+  const location = isLocal ? 'IndexedDB (browser storage)' : (track.file?.startsWith('/songs/') ? 'Bundled library (public/songs)' : 'Local file');
+
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   return (
     <Modal id="properties" title={`${track.title} Properties`} className="props-window">
       <div className="props-body">
         <div className="props-tab-header">General File Info</div>
+<<<<<<< HEAD
         <div className="props-row"><span className="label">File Name:</span><span className="value">{track.id}.mp3</span></div>
         <div className="props-row"><span className="label">Location:</span><span className="value">C:\Program Files\Spotify\Library</span></div>
+=======
+        <div className="props-row"><span className="label">File Name:</span><span className="value">{track.fileName || track.id + '.mp3'}</span></div>
+        <div className="props-row"><span className="label">Location:</span><span className="value">{location}</span></div>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <hr />
         <div className="props-row"><span className="label">Title:</span><span className="value">{track.title}</span></div>
         <div className="props-row"><span className="label">Artist:</span><span className="value">{track.artist}</span></div>
@@ -332,6 +382,7 @@ export function PropertiesModal() {
 
 export function AboutModal() {
   return (
+<<<<<<< HEAD
     <Modal id="about" title="About Spotify" className="about-window">
       <div className="about-body">
         <svg className="about-logo" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#1DB954"/><path d="M25,32 Q50,17 75,32 M30,48 Q50,35 70,48 M35,64 Q50,53 65,64" stroke="black" strokeWidth="8" fill="none" strokeLinecap="round"/></svg>
@@ -340,6 +391,16 @@ export function AboutModal() {
         <p>Copyright &copy; 2006 Spotify AB. All rights reserved.</p>
         <hr />
         <p>A revolutionary local-first music management and device synchronization console.</p>
+=======
+    <Modal id="about" title="About MyJukeBox" className="about-window">
+      <div className="about-body">
+        <img className="about-logo" src="/favicon.svg" alt="MyJukeBox" style={{width: 48, height: 48}} />
+        <h3>MyJukeBox</h3>
+        <p>Version 1.0.0 (Build XP)</p>
+        <p>Copyright &copy; 2026 MyJukeBox. All rights reserved.</p>
+        <hr />
+        <p>Your personal MP3 space. Upload, store and play your MP3 collection right in your browser.</p>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <div className="about-actions"><button className="xp-button primary" onClick={() => useStore.getState().closeModal('about')}>OK</button></div>
       </div>
     </Modal>
@@ -371,3 +432,182 @@ export function ConfirmModal() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+// ===== NEW MODALS FOR PHASE 3 =====
+
+export function AddToPlaylistModal() {
+  const { rightClickedTrackId, playlists, closeModal, showConfirm, createPlaylist, addToPlaylist } = useStore();
+  const [newPlaylistName, setNewPlaylistName] = useState('');
+
+  const track = useStore.getState().library.find(t => t.id === rightClickedTrackId) || 
+                useStore.getState().allSongs.find(t => t.id === rightClickedTrackId);
+  
+  if (!track) return null;
+
+  const handleAddToSelected = (playlistId) => {
+    addToPlaylist(playlistId, track.id);
+    closeModal('addToPlaylist');
+  };
+
+  const handleCreateAndAdd = () => {
+    if (!newPlaylistName.trim()) return;
+    const id = useStore.getState().createPlaylist(newPlaylistName.trim());
+    addToPlaylist(id, track.id);
+    closeModal('addToPlaylist');
+    setNewPlaylistName('');
+  };
+
+  return (
+    <Modal id="addToPlaylist" title={`Add "${track.title}" to Playlist`} className="props-window">
+      <div className="props-body" style={{padding: '16px'}}>
+        {playlists.length === 0 ? (
+          <div style={{textAlign: 'center', padding: '20px', color: '#666'}}>
+            <p>No playlists exist yet.</p>
+            <p>Create a new playlist to add this track.</p>
+          </div>
+        ) : (
+          <div style={{marginBottom: '16px'}}>
+            <p style={{fontWeight: 'bold', marginBottom: '8px'}}>Select playlist(s):</p>
+            <div style={{maxHeight: '200px', overflowY: 'auto'}}>
+              {playlists.map(pl => (
+                <label key={pl.id} className="playlist-checkbox-item" style={{display: 'block', padding: '8px', cursor: 'pointer', borderBottom: '1px solid #e0ddd0'}}>
+                  <input 
+                    type="checkbox" 
+                    onChange={(e) => e.target.checked && useStore.getState().addToPlaylist(pl.id, useStore.getState().rightClickedTrackId)}
+                    style={{marginRight: '8px'}}
+                  />
+                  {pl.name} ({pl.tracks.length} tracks)
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+        <hr />
+        <div style={{marginTop: '12px'}}>
+          <h4>Or create new playlist:</h4>
+          <div style={{display: 'flex', gap: '8px', marginTop: '8px'}}>
+            <input 
+              type="text" 
+              value={newPlaylistName} 
+              onChange={e => setNewPlaylistName(e.target.value)}
+              placeholder="New playlist name"
+              style={{flex: 1, padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+            />
+            <button className="xp-button primary" onClick={handleCreateAndAdd} disabled={!newPlaylistName.trim()}>Create & Add</button>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+export function EditDetailsModal() {
+  const { rightClickedTrackId, allSongs, library, closeModal, updateSongMetadata, showConfirm } = useStore();
+  const track = library.find(t => t.id === rightClickedTrackId) || allSongs.find(t => t.id === rightClickedTrackId);
+  
+  const [title, setTitle] = useState(track?.title || '');
+  const [artist, setArtist] = useState(track?.artist || '');
+  const [album, setAlbum] = useState(track?.album || '');
+  const [saving, setSaving] = useState(false);
+  
+  if (!track) return null;
+
+  const handleSave = async () => {
+    if (!title.trim()) {
+      showConfirm("Invalid Title", "Title cannot be empty.", null);
+      return;
+    }
+    setSaving(true);
+    try {
+      const updates = {
+        title: title.trim(),
+        artist: artist.trim() || 'Unknown Artist',
+        album: album.trim() || 'Unknown Album',
+      };
+      await updateSongMetadata(track.id, updates);
+      closeModal('editDetails');
+    } catch (e) {
+      showConfirm("Error", "Failed to save changes.", null);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal id="editDetails" title={`Edit: ${track.title}`} className="props-window">
+      <div className="props-body" style={{padding: '16px'}}>
+        <div className="form-group" style={{marginBottom: '12px'}}>
+          <label style={{display: 'block', marginBottom: '4px', fontWeight: 'bold'}}>Title:</label>
+          <input 
+            type="text" 
+            value={title} 
+            onChange={e => setTitle(e.target.value)}
+            style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+          />
+        </div>
+        <div className="form-group" style={{marginBottom: '12px'}}>
+          <label style={{display: 'block', marginBottom: '4px', fontWeight: 'bold'}}>Artist:</label>
+          <input 
+            type="text" 
+            value={artist} 
+            onChange={e => setArtist(e.target.value)}
+            style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+          />
+        </div>
+        <div className="form-group" style={{marginBottom: '12px'}}>
+          <label style={{display: 'block', marginBottom: '4px', fontWeight: 'bold'}}>Album:</label>
+          <input 
+            type="text" 
+            value={album} 
+            onChange={e => setAlbum(e.target.value)}
+            style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+          />
+        </div>
+        <div className="props-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '16px'}}>
+          <button className="xp-button" onClick={() => closeModal('editDetails')}>Cancel</button>
+          <button className="xp-button primary" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+export function StorageErrorToast() {
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const handleStorageError = (event) => {
+      setError(event.detail.message);
+      setTimeout(() => setError(null), 5000);
+    };
+    window.addEventListener('storageError', handleStorageError);
+    return () => window.removeEventListener('storageError', handleStorageError);
+  }, []);
+  
+  if (!error) return null;
+  
+  return (
+    <div className="xp-storage-error-toast" style={{
+      position: 'fixed',
+      bottom: '80px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: '#fff',
+      border: '2px solid #d32f2f',
+      borderRadius: '4px',
+      padding: '12px 20px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+      zIndex: 9999,
+      maxWidth: '400px',
+      textAlign: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+        <span style={{color: '#d32f2f', fontSize: '18px'}}>⚠</span>
+        <span style={{color: '#d32f2f', fontWeight: 'bold', fontSize: '11px'}}>{error}</span>
+      </div>
+    </div>
+  );
+}
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)

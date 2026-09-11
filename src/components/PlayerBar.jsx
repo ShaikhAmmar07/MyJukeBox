@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import useStore from '../store/useStore';
+<<<<<<< HEAD
 import { initAudio, resumeAudioContext } from '../audio/audioEngine';
 import { songs } from '../data/songs';
 import { GoogleGenAI } from '@google/genai';
@@ -10,12 +11,24 @@ export default function PlayerBar({ audioRef }) {
     currentSong, isPlaying, library, setIsPlaying, setCurrentSong, incrementPlayCount, rateSong, openModal,
     smartShuffleActive, lastPlayed, addToLastPlayed, toggleSmartShuffle
   } = useStore();
+=======
+import { initAudio, resumeAudioContext, getByteFrequencyData } from '../audio/audioEngine';
+
+export default function PlayerBar({ audioRef }) {
+  const { 
+    currentSong, isPlaying, library, playQueue, shuffle, repeat, queueHistory,
+    setIsPlaying, setCurrentSong, incrementPlayCount, rateSong, openModal,
+    toggleShuffle, setRepeat, playNext, playPrevious
+  } = useStore();
+  
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   const timeElapsedRef = useRef(null);
   const timeTotalRef = useRef(null);
   const timelineRef = useRef(null);
   const volumeRef = useRef(null);
   const playIconRef = useRef(null);
   const hasIncrementedRef = useRef(false);
+<<<<<<< HEAD
   const [aiLoading, setAiLoading] = useState(false);
   const [recommendationText, setRecommendationText] = useState('');
 
@@ -91,14 +104,64 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     }
   }, [currentSong, lastPlayed]);
 
+=======
+  const [mediaSessionReady, setMediaSessionReady] = useState(false);
+
+  // Initialize Media Session API
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => {
+        const audio = audioRef.current;
+        if (audio) { resumeAudioContext(); audio.play().catch(() => {}); }
+        setIsPlaying(true);
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        const audio = audioRef.current;
+        if (audio) audio.pause();
+        setIsPlaying(false);
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', () => playPrevious());
+      navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        const audio = audioRef.current;
+        if (audio && details.seekTime !== undefined) {
+          audio.currentTime = details.seekTime;
+        }
+      });
+      setMediaSessionReady(true);
+    }
+  }, [setIsPlaying, playNext, playPrevious]);
+
+  // Update Media Session metadata when currentSong changes
+  useEffect(() => {
+    if (!mediaSessionReady || !currentSong) return;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist,
+      album: currentSong.album || 'Unknown Album',
+      artwork: currentSong.coverArt ? [{ src: currentSong.coverArt, sizes: '512x512', type: 'image/png' }] : [],
+    });
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+  }, [currentSong, isPlaying, mediaSessionReady]);
+
+  // Handle audio source change (only init once)
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentSong) return;
 
+<<<<<<< HEAD
     if (currentSong.file && audio.src !== window.location.origin + currentSong.file) {
       initAudio(audio);
       resumeAudioContext();
       audio.src = currentSong.file;
+=======
+    const targetSrc = currentSong.file;
+    if (targetSrc && audio.src !== targetSrc) {
+      initAudio(audio);
+      resumeAudioContext();
+      audio.src = targetSrc;
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
       hasIncrementedRef.current = false;
       audio.play().then(() => {
         setIsPlaying(true);
@@ -110,6 +173,10 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     }
   }, [currentSong]);
 
+<<<<<<< HEAD
+=======
+  // Play/Pause toggle
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -117,6 +184,10 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     else audio.pause();
   }, [isPlaying]);
 
+<<<<<<< HEAD
+=======
+  // Time updates and ended handling
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -126,10 +197,22 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
       const pct = (audio.currentTime / audio.duration) * 100;
       if (timelineRef.current) timelineRef.current.value = pct;
       if (timeElapsedRef.current) timeElapsedRef.current.textContent = formatTime(audio.currentTime);
+<<<<<<< HEAD
+=======
+      // Update Media Session position
+      if (mediaSessionReady) {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration,
+          playbackRate: audio.playbackRate,
+          position: audio.currentTime,
+        });
+      }
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     };
     const onMeta = () => {
       if (timeTotalRef.current) timeTotalRef.current.textContent = formatTime(audio.duration);
     };
+<<<<<<< HEAD
     const onEnded = async () => {
       const state = useStore.getState();
       if (state.smartShuffleActive) {
@@ -152,6 +235,16 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
           state.setIsPlaying(true);
         }
       }
+=======
+    const onEnded = () => {
+      // Handle repeat modes
+      if (repeat === 'one') {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+        return;
+      }
+      playNext();
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     };
 
     audio.addEventListener('timeupdate', onTimeUpdate);
@@ -162,7 +255,11 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
       audio.removeEventListener('loadedmetadata', onMeta);
       audio.removeEventListener('ended', onEnded);
     };
+<<<<<<< HEAD
   }, [audioRef]);
+=======
+  }, [audioRef, repeat, playNext, mediaSessionReady]);
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
   const togglePlayback = useCallback(() => {
     if (!currentSong) {
@@ -178,6 +275,7 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     setIsPlaying(false);
   }, [audioRef]);
 
+<<<<<<< HEAD
   const prevNext = useCallback(async (dir) => {
     if (library.length === 0 || !currentSong) return;
 
@@ -203,6 +301,8 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     }
   }, [library, currentSong, smartShuffleActive, getAIRecommendation]);
 
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
   const handleTimeline = (e) => {
     const audio = audioRef.current;
     if (audio && audio.duration) audio.currentTime = (e.target.value / 100) * audio.duration;
@@ -220,6 +320,7 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
     rateSong(currentSong.id, Math.ceil(pct * 5));
   };
 
+<<<<<<< HEAD
   const stars = currentSong ? '★'.repeat(currentSong.rating) + '☆'.repeat(5 - currentSong.rating) : '☆☆☆☆☆';
 
   return (
@@ -227,6 +328,24 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
       <div className="player-track-info">
         <div className="mini-album-art" style={{ background: currentSong?.coverColor || '#ccc' }}>
           <span>{currentSong ? currentSong.title[0] : '♪'}</span>
+=======
+  const stars = currentSong ? '★'.repeat(currentSong.rating || 0) + '☆'.repeat(5 - (currentSong.rating || 0)) : '☆☆☆☆☆';
+
+  // Repeat button label and class
+  const repeatLabels = { off: '⟳', all: '⟳', one: '⟳1' };
+  const repeatTitle = { off: 'Repeat Off', all: 'Repeat All', one: 'Repeat One' };
+
+  return (
+    <div className="xp-player-bar">
+      {/* Left: Album Art + Track Info */}
+      <div className="player-track-info">
+        <div className="mini-album-art" style={{ background: currentSong?.coverColor || '#ccc' }}>
+          {currentSong?.coverArt ? (
+            <img src={currentSong.coverArt} alt="" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: 3}} />
+          ) : (
+            <span>{currentSong ? currentSong.title[0] : '♪'}</span>
+          )}
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         </div>
         <div className="mini-track-meta">
           <span className="track-title">{currentSong?.title || 'No track selected'}</span>
@@ -235,6 +354,7 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
             <span>{currentSong?.bitrate || '192 kbps'}</span>
             <span className="divider">|</span>
             <span className="rating-stars" onClick={handleRatingClick}>{stars}</span>
+<<<<<<< HEAD
             {recommendationText && <span className="divider">|</span>}
             {recommendationText && <span style={{ fontSize: '10px', color: '#0066cc' }}>{recommendationText}</span>}
           </div>
@@ -247,6 +367,34 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
           <button className="player-btn" onClick={stopTrack} title="Stop"><span>&#9632;</span></button>
           <button className="player-btn" onClick={(e) => { if (aiLoading) { window.playErrorSound?.(); } else { prevNext(1); } }} title="Next" disabled={aiLoading}>
             {aiLoading ? '...' : '▶▶'}
+=======
+          </div>
+        </div>
+      </div>
+
+      {/* Center: Playback Controls */}
+      <div className="player-controls-panel">
+        <div className="player-buttons">
+          <button 
+            className={`player-btn ${shuffle ? 'active' : ''}`} 
+            onClick={toggleShuffle} 
+            title={shuffle ? 'Shuffle On (Smart)' : 'Shuffle Off'}
+          >
+            <span>🔀</span>
+          </button>
+          <button className="player-btn" onClick={playPrevious} title="Previous"><span>&#9664;&#9664;</span></button>
+          <button className="player-btn primary" onClick={togglePlayback} title="Play/Pause">
+            <span ref={playIconRef}>{isPlaying ? '❚❚' : '▶'}</span>
+          </button>
+          <button className="player-btn" onClick={stopTrack} title="Stop"><span>&#9632;</span></button>
+          <button className="player-btn" onClick={playNext} title="Next"><span>▶▶</span></button>
+          <button 
+            className={`player-btn ${repeat !== 'off' ? 'active' : ''}`} 
+            onClick={() => setRepeat(repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off')} 
+            title={repeatTitle[repeat]}
+          >
+            <span>{repeatLabels[repeat]}</span>
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
           </button>
         </div>
         <div className="player-timeline-wrapper">
@@ -255,6 +403,7 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
           <span className="time-total" ref={timeTotalRef}>0:00</span>
         </div>
       </div>
+<<<<<<< HEAD
       <div className="player-utils-panel">
         <button 
           className={`player-icon-btn ${smartShuffleActive ? 'smart-shuffle-active' : ''}`} 
@@ -263,6 +412,11 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
         >
           🎧 Smart Shuffle
         </button>
+=======
+
+      {/* Right: Volume + EQ/Visualizer */}
+      <div className="player-utils-panel">
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
         <button className="player-icon-btn" onClick={() => openModal('eq')}>EQ</button>
         <button className="player-icon-btn" onClick={() => openModal('visualizer')}>Visuals</button>
         <div className="player-volume-wrapper">
@@ -270,6 +424,7 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
           <div className="xp-slider-container"><input type="range" ref={volumeRef} defaultValue="70" min="0" max="100" onInput={handleVolume} /></div>
         </div>
       </div>
+<<<<<<< HEAD
       <style jsx>{`
         .smart-shuffle-active {
           background: linear-gradient(135deg, #1db954, #1ed760);
@@ -282,6 +437,8 @@ Return ONLY valid JSON: {"nextSongId": song_id, "reason": "one sentence why this
           50% { box-shadow: 0 0 15px #1db954, 0 0 25px #1ed760; }
         }
       `}</style>
+=======
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
     </div>
   );
 }
@@ -291,4 +448,8 @@ function formatTime(sec) {
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
   return `${m}:${s < 10 ? '0' : ''}${s}`;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8122ee6 (Update MyJukeBox codebase)
