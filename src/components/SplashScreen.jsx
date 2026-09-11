@@ -29,21 +29,11 @@ export default function SplashScreen() {
 
   return (
     <div className="splash-overlay" style={{ opacity: progress >= 100 ? 0 : 1, transition: 'opacity 0.5s' }}>
-<<<<<<< HEAD
-      <div className="splash-box">
-        <div className="splash-logo-area">
-          <svg className="splash-logo" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="#1DB954"/>
-            <path d="M25,32 Q50,17 75,32 M30,48 Q50,35 70,48 M35,64 Q50,53 65,64" stroke="black" strokeWidth="8" fill="none" strokeLinecap="round"/>
-          </svg>
-          <div className="splash-title">Spotify 2006</div>
-=======
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <div className="splash-box">
         <div className="splash-logo-area">
           <img className="splash-logo" src="/favicon.svg" alt="MyJukeBox" />
           <div className="splash-title">MyJukeBox</div>
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
         </div>
         <div className="splash-loader-container">
           <div className="splash-status-text">{status}</div>
@@ -51,11 +41,7 @@ export default function SplashScreen() {
             <div className="xp-progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
-<<<<<<< HEAD
-        <div className="splash-version">Version 1.0.4 (Build 2006)</div>
-=======
         <div className="splash-version">Version 1.0.0 (Build XP)</div>
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
       </div>
     </div>
   );

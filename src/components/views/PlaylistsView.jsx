@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import useStore from '../../store/useStore';
-
-export default function PlaylistsView() {
-  const { playlists, activePlaylistId, allSongs, setActivePlaylist, renamePlaylist, deletePlaylist, removeFromPlaylist, navigateTo, openModal, setCurrentSong, setIsPlaying, showConfirm } = useStore();
-
-  const playlist = playlists.find(p => p.id === activePlaylistId);
-  if (!playlist) return <div className="content-view"><p>Select a playlist from the sidebar, or create a new one.</p></div>;
-
-  const tracks = playlist.tracks.map(id => allSongs.find(s => s.id === id)).filter(Boolean);
-=======
 import { useState, useMemo } from 'react';
 import useStore from '../../store/useStore';
 
@@ -96,14 +85,11 @@ export default function PlaylistsView() {
 
   // Playlist detail view
   const tracks = playlist.tracks.map(id => trackById.get(id)).filter(Boolean);
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
 
   const handlePlayAll = () => {
     if (tracks.length > 0) { setCurrentSong(tracks[0]); setIsPlaying(true); }
   };
 
-<<<<<<< HEAD
-=======
   const handleShufflePlay = () => {
     if (tracks.length > 0) {
       toggleShuffle();
@@ -115,7 +101,6 @@ export default function PlaylistsView() {
     }
   };
 
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
   const handleRename = () => {
     const name = prompt("Enter new name:", playlist.name);
     if (name && name.trim()) renamePlaylist(playlist.id, name.trim());
@@ -131,15 +116,6 @@ export default function PlaylistsView() {
   return (
     <div className="content-view">
       <div className="playlist-header">
-<<<<<<< HEAD
-        <h3>{playlist.name}</h3>
-        <div className="playlist-meta-actions">
-          <button className="xp-button" onClick={handlePlayAll}>Play Playlist</button>
-          <button className="xp-button" onClick={handleRename}>Rename</button>
-          <button className="xp-button" onClick={handleDelete}>Delete</button>
-          <button className="xp-button" onClick={() => openModal('cdBurner')}>&#128191; Burn to CD</button>
-          <button className="xp-button" onClick={() => openModal('deviceSync')}>&#128241; Sync Device</button>
-=======
         <button className="xp-button" onClick={() => setActivePlaylist(null)} style={{marginRight: '12px'}}>&#8592; Back</button>
         <h3>{playlist.name}</h3>
         <div className="playlist-meta-actions">
@@ -148,7 +124,6 @@ export default function PlaylistsView() {
           <button className="xp-button" onClick={handleRename}>Rename</button>
           <button className="xp-button" onClick={handleDelete}>Delete</button>
           <button className="xp-button" onClick={() => openModal('cdBurner')}>&#128191; Burn to CD</button>
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
         </div>
       </div>
       <div className="playlist-songs table-container">
@@ -156,11 +131,7 @@ export default function PlaylistsView() {
           <thead><tr><th style={{width:40}}>#</th><th>Song</th><th>Artist</th><th>Album</th><th>Length</th><th>Actions</th></tr></thead>
           <tbody>
             {tracks.length === 0 ? (
-<<<<<<< HEAD
-              <tr><td colSpan="6" style={{textAlign:'center'}}>No tracks. Right-click library tracks to add them.</td></tr>
-=======
               <tr><td colSpan="6" style={{textAlign:'center', padding: '20px'}}>No tracks in this playlist. Add tracks from the Library.</td></tr>
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
             ) : tracks.map((track, idx) => (
               <tr key={track.id} onDoubleClick={() => { setCurrentSong(track); setIsPlaying(true); }}>
                 <td>{idx + 1}</td>
@@ -168,13 +139,9 @@ export default function PlaylistsView() {
                 <td>{track.artist}</td>
                 <td>{track.album}</td>
                 <td>{track.duration}</td>
-<<<<<<< HEAD
-                <td><button className="xp-button small" onClick={() => removeFromPlaylist(playlist.id, track.id)}>&times;</button></td>
-=======
                 <td>
                   <button className="xp-button small" onClick={(e) => { e.stopPropagation(); removeFromPlaylist(playlist.id, track.id); }}>&times; Remove</button>
                 </td>
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
               </tr>
             ))}
           </tbody>
@@ -182,8 +149,4 @@ export default function PlaylistsView() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8122ee6 (Update MyJukeBox codebase)

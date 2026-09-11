@@ -1,20 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-<<<<<<< HEAD
-
-// https://vite.dev/config/
-=======
 import path from 'path'
 
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
 export default defineConfig({
   plugins: [react()],
   define: {
     'process.env': {}
-<<<<<<< HEAD
-  }
-})
-=======
   },
   resolve: {
     alias: {
@@ -27,4 +18,3 @@ export default defineConfig({
     }
   }
 })
->>>>>>> 8122ee6 (Update MyJukeBox codebase)
