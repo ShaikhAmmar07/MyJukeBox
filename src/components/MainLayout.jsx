@@ -79,8 +79,9 @@ export default function MainLayout() {
   };
 
   const handleNewPlaylist = () => {
-    const name = prompt("Enter Playlist Name:", `New Playlist ${playlists.length + 1}`);
-    if (name && name.trim()) createPlaylist(name.trim());
+    showPrompt("New Playlist", "Enter Playlist Name:", `New Playlist ${playlists.length + 1}`, (name) => {
+      if (name && name.trim()) createPlaylist(name.trim());
+    });
   };
 
   const handleContextAction = (action) => {

@@ -32,7 +32,7 @@ export default function SplashScreen() {
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <div className="splash-box">
         <div className="splash-logo-area">
-          <img className="splash-logo" src="/favicon.svg" alt="MyJukeBox" />
+          <img className="splash-logo" src="/loading-icon.svg" alt="MyJukeBox" />
           <div className="splash-title">MyJukeBox</div>
         </div>
         <div className="splash-loader-container">

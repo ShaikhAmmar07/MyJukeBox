@@ -34,6 +34,7 @@ export default function HomeView() {
             <div className="xp-panel-header">Add Music</div>
             <div className="xp-panel-body quick-actions-body">
               <button className="xp-button full-width primary" onClick={() => navigateTo('library')}>&#128193; Upload MP3s</button>
+              <button className="xp-button full-width" onClick={() => useStore.getState().openModal('downloadFromUrl')}>&#128279; Download from URL</button>
               <button className="xp-button full-width" onClick={() => navigateTo('playlists')}>&#9834; Create Playlist</button>
               <button className="xp-button full-width" onClick={() => useStore.getState().openModal('cdBurner')}>&#128191; Burn Playlist to CD</button>
             </div>

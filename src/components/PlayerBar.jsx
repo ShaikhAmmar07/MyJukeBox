@@ -16,6 +16,7 @@ export default function PlayerBar({ audioRef }) {
   const playIconRef = useRef(null);
   const hasIncrementedRef = useRef(false);
   const [mediaSessionReady, setMediaSessionReady] = useState(false);
+  const playbackStartedRef = useRef(false);
 
   // Initialize Media Session API
   useEffect(() => {
@@ -65,13 +66,18 @@ export default function PlayerBar({ audioRef }) {
       resumeAudioContext();
       audio.src = targetSrc;
       hasIncrementedRef.current = false;
+      playbackStartedRef.current = false;
       audio.play().then(() => {
         setIsPlaying(true);
         if (!hasIncrementedRef.current) {
           incrementPlayCount(currentSong.id);
           hasIncrementedRef.current = true;
+          playbackStartedRef.current = true;
         }
-      }).catch(() => {});
+      }).catch(() => {
+        // Audio failed to play - don't increment play count
+        setIsPlaying(false);
+      });
     }
   }, [currentSong]);
 
@@ -79,7 +85,7 @@ export default function PlayerBar({ audioRef }) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (isPlaying) { resumeAudioContext(); audio.play().catch(() => {}); }
+    if (isPlaying) { resumeAudioContext(); audio.play().catch(() => { setIsPlaying(false); }); }
     else audio.pause();
   }, [isPlaying]);
 
@@ -106,6 +112,10 @@ export default function PlayerBar({ audioRef }) {
       if (timeTotalRef.current) timeTotalRef.current.textContent = formatTime(audio.duration);
     };
     const onEnded = () => {
+      // Only advance to next track if playback actually started (not just error)
+      if (!playbackStartedRef.current) {
+        return;
+      }
       // Handle repeat modes
       if (repeat === 'one') {
         audio.currentTime = 0;
@@ -114,14 +124,23 @@ export default function PlayerBar({ audioRef }) {
       }
       playNext();
     };
+    const onError = () => {
+      // Audio failed to load/play - stop and don't increment play count
+      playbackStartedRef.current = false;
+      setIsPlaying(false);
+      // Optionally show error toast
+      console.warn('Audio playback error:', audio.error?.message || 'Unknown error');
+    };
 
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('loadedmetadata', onMeta);
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
     return () => {
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('loadedmetadata', onMeta);
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
     };
   }, [audioRef, repeat, playNext, mediaSessionReady]);
 

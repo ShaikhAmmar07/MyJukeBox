@@ -101,6 +101,7 @@ export default function LibraryView() {
         <button className="xp-button" onClick={handlePlay}>&#9658; Play</button>
         <button className="xp-button" onClick={handleDelete}>&times; Delete</button>
         <button className="xp-button" onClick={handleProperties}>Properties</button>
+        <button className="xp-button" onClick={() => openModal('downloadFromUrl')}>&#128279; Download from URL</button>
         <UploadPanel />
         <div className="lib-search-box">
           <input type="text" placeholder="Filter library..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />

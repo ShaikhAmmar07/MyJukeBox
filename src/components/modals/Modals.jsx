@@ -23,6 +23,71 @@ function Modal({ id, title, children, className = '' }) {
   );
 }
 
+// ===== PROMPT MODAL (replaces window.prompt) =====
+export function PromptModal() {
+  const { openModals, closeModal } = useStore();
+  const promptState = openModals.prompt;
+  
+  const [value, setValue] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (promptState && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [promptState]);
+
+  useEffect(() => {
+    if (promptState) {
+      setValue(promptState.defaultValue || '');
+    }
+  }, [promptState]);
+
+  if (!promptState) return null;
+  
+  const { title, message, onSubmit } = promptState;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    closeModal('prompt');
+    if (onSubmit) onSubmit(value);
+  };
+
+  const handleCancel = () => {
+    closeModal('prompt');
+    if (onSubmit) onSubmit(null);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSubmit(e);
+    if (e.key === 'Escape') handleCancel();
+  };
+
+  return (
+    <Modal id="prompt" title={title} className="prompt-window">
+      <div className="props-body" style={{padding: '16px'}}>
+        <p style={{marginBottom: '12px'}}>{message}</p>
+        <form onSubmit={handleSubmit}>
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+            onKeyDown={handleKeyDown}
+            autoComplete="off"
+          />
+          <div className="props-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '12px'}}>
+            <button type="button" className="xp-button" onClick={handleCancel}>Cancel</button>
+            <button type="submit" className="xp-button primary">OK</button>
+          </div>
+        </form>
+      </div>
+    </Modal>
+  );
+}
+
 export function EQModal() {
   const [preset, setPreset] = useState('Flat');
   const [power, setPower] = useState(true);
@@ -480,5 +545,81 @@ export function StorageErrorToast() {
         <span style={{color: '#d32f2f', fontWeight: 'bold', fontSize: '11px'}}>{error}</span>
       </div>
     </div>
+  );
+}
+
+// ===== DOWNLOAD FROM URL MODAL =====
+export function DownloadFromUrlModal() {
+  const { closeModal, downloadFromUrl, showConfirm } = useStore();
+  const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (!url.trim()) return;
+    
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const song = await downloadFromUrl(url.trim());
+      if (song) {
+        closeModal('downloadFromUrl');
+        showConfirm("Download Complete", `"${song.title}" has been added to your library.`, null);
+      }
+    } catch (e) {
+      if (e.message === 'CORS_ERROR') {
+        setError('Download blocked by browser security (CORS). Please download the file to your computer first, then use the Upload button.');
+      } else {
+        setError(e.message || 'Failed to download. Please check the URL and try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Modal id="downloadFromUrl" title="Download from URL" className="props-window">
+      <div className="props-body" style={{padding: '16px'}}>
+        <p style={{marginBottom: '12px', fontSize: '11px', color: '#666'}}>
+          Paste a direct link to an MP3 file. The file will be downloaded and added to your library.
+        </p>
+        <form onSubmit={handleDownload}>
+          <div className="form-group" style={{marginBottom: '12px'}}>
+            <label style={{display: 'block', marginBottom: '4px', fontWeight: 'bold'}}>
+              MP3 URL:
+            </label>
+            <input
+              type="url"
+              value={url}
+              onChange={e => setUrl(e.target.value)}
+              placeholder="https://example.com/song.mp3"
+              disabled={loading}
+              style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
+            />
+          </div>
+          {error && (
+            <div style={{background: '#ffe0e0', border: '1px solid #d32f2f', padding: '8px', marginBottom: '12px', borderRadius: '3px', color: '#d32f2f', fontSize: '11px'}}>
+              {error}
+            </div>
+          )}
+          <div className="props-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end'}}>
+            <button type="button" className="xp-button" onClick={() => closeModal('downloadFromUrl')} disabled={loading}>Cancel</button>
+            <button type="submit" className="xp-button primary" disabled={loading || !url.trim()}>
+              {loading ? 'Downloading...' : 'Download'}
+            </button>
+          </div>
+        </form>
+        {loading && (
+          <div style={{marginTop: '12px', textAlign: 'center'}}>
+            <div className="xp-progress-bar" style={{width: '100%'}}>
+              <div className="xp-progress-fill" style={{width: '100%', animation: 'xp-progress-anim 1s linear infinite'}}></div>
+            </div>
+            <p style={{marginTop: '8px', fontSize: '11px', color: '#666'}}>Downloading file...</p>
+          </div>
+        )}
+      </div>
+    </Modal>
   );
 }

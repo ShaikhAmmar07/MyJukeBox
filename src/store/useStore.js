@@ -6,8 +6,6 @@ import {
   getRecentlyPlayed, addRecentlyPlayed
 } from '../utils/audioStorage';
 
-const bundledLibrary = songs.map(song => ({ ...song, bundled: true }));
-
 // Fisher-Yates shuffle with smart artist separation
 function smartShuffle(tracks, currentTrackId = null) {
   const shuffled = [...tracks];
@@ -48,11 +46,8 @@ const useStore = create((set, get) => ({
   historyIndex: 0,
   
   allSongs: [...songs],
-  library: [...bundledLibrary],
-  playlists: [
-    { id: 1, name: "Workout Mix", tracks: [2, 7], createdAt: Date.now() - 86400000 },
-    { id: 2, name: "Chillout 2006", tracks: [7], createdAt: Date.now() - 172800000 }
-  ],
+  library: [],
+  playlists: [],
   
   // Playback state
   currentSong: null,
@@ -70,6 +65,8 @@ const useStore = create((set, get) => ({
   openModals: {},
   
   confirmDialog: null,
+  
+  promptDialog: null,
   
   searchQuery: '',
   
@@ -106,6 +103,9 @@ const useStore = create((set, get) => ({
   
   showConfirm: (title, message, onConfirm) => set({ confirmDialog: { title, message, onConfirm } }),
   clearConfirm: () => set({ confirmDialog: null }),
+  
+  showPrompt: (title, message, defaultValue, onSubmit) => set({ promptDialog: { title, message, defaultValue, onSubmit } }),
+  clearPrompt: () => set({ promptDialog: null }),
   
   addToLibrary: (song) => set((s) => {
     if (s.library.some(t => t.id === song.id)) return {};
@@ -364,6 +364,28 @@ const useStore = create((set, get) => ({
     return get().updateSongMetadata(songId, details);
   },
   
+  downloadFromUrl: async (url) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      if (!blob.type.includes('audio') && !blob.type.includes('mpeg') && !blob.type.includes('mp3')) {
+        // Try to infer from URL
+        if (!url.toLowerCase().includes('.mp3')) {
+          throw new Error('Not an audio file');
+        }
+      }
+      const file = new File([blob], url.split('/').pop() || 'download.mp3', { type: 'audio/mpeg' });
+      const uploaded = await get().uploadFiles([file]);
+      return uploaded[0] || null;
+    } catch (e) {
+      if (e.name === 'TypeError' && e.message.includes('fetch')) {
+        throw new Error('CORS_ERROR');
+      }
+      throw e;
+    }
+  },
+  
   hydrateLibrary: async () => {
     if (get().hasHydrated) return;
     try {
@@ -381,14 +403,9 @@ const useStore = create((set, get) => ({
       } else {
         set({ hasHydrated: true });
       }
-      // Hydrate playlists
+      // Hydrate playlists - REPLACE entirely (not merge) to avoid deleted playlists reappearing
       if (storedPlaylists.length) {
-        // Merge with default playlists, avoiding duplicates by ID
-        set((s) => {
-          const existingIds = new Set(s.playlists.map(p => p.id));
-          const unique = storedPlaylists.filter(p => !existingIds.has(p.id));
-          return { playlists: [...s.playlists, ...unique] };
-        });
+        set({ playlists: storedPlaylists });
       }
     } catch (e) {
       console.warn('Library hydration failed:', e);

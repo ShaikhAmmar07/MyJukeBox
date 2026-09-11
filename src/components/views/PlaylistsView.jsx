@@ -6,7 +6,7 @@ export default function PlaylistsView() {
     playlists, activePlaylistId, allSongs, library, 
     setActivePlaylist, renamePlaylist, deletePlaylist, 
     removeFromPlaylist, navigateTo, openModal, 
-    setCurrentSong, setIsPlaying, showConfirm,
+    setCurrentSong, setIsPlaying, showConfirm, showPrompt,
     toggleShuffle
   } = useStore();
 
@@ -22,11 +22,12 @@ export default function PlaylistsView() {
   if (showList) {
     // Playlist list view
     const handleCreatePlaylist = () => {
-      const name = prompt("Enter Playlist Name:", `My Playlist ${playlists.length + 1}`);
-      if (name && name.trim()) {
-        const id = useStore.getState().createPlaylist(name.trim());
-        setActivePlaylist(id);
-      }
+      showPrompt("New Playlist", "Enter Playlist Name:", `My Playlist ${playlists.length + 1}`, (name) => {
+        if (name && name.trim()) {
+          const id = useStore.getState().createPlaylist(name.trim());
+          setActivePlaylist(id);
+        }
+      });
     };
 
     return (
@@ -71,7 +72,7 @@ export default function PlaylistsView() {
                     </div>
                   </div>
                   <div className="playlist-card-actions">
-                    <button className="xp-button small" onClick={(e) => { e.stopPropagation(); renamePlaylist(pl.id, prompt("Enter new name:", pl.name) || pl.name); }}>Rename</button>
+                    <button className="xp-button small" onClick={(e) => { e.stopPropagation(); showPrompt("Rename Playlist", "Enter new name:", pl.name, (name) => { if (name && name.trim()) renamePlaylist(pl.id, name.trim()); }); }}>Rename</button>
                     <button className="xp-button small" onClick={(e) => { e.stopPropagation(); useStore.getState().showConfirm("Delete Playlist", `Delete "${pl.name}"?`, () => { useStore.getState().deletePlaylist(pl.id); }); }}>Delete</button>
                   </div>
                 </div>
@@ -102,8 +103,9 @@ export default function PlaylistsView() {
   };
 
   const handleRename = () => {
-    const name = prompt("Enter new name:", playlist.name);
-    if (name && name.trim()) renamePlaylist(playlist.id, name.trim());
+    showPrompt("Rename Playlist", "Enter new name:", playlist.name, (name) => {
+      if (name && name.trim()) renamePlaylist(playlist.id, name.trim());
+    });
   };
 
   const handleDelete = () => {
