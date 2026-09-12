@@ -375,7 +375,7 @@ export function ConfirmModal() {
 // ===== NEW MODALS FOR PHASE 3 =====
 
 export function AddToPlaylistModal() {
-  const { rightClickedTrackId, playlists, closeModal, showConfirm, createPlaylist, addToPlaylist } = useStore();
+  const { rightClickedTrackId, playlists, closeModal, showConfirm, createPlaylist, addToPlaylist, persistPlaylist } = useStore();
   const [newPlaylistName, setNewPlaylistName] = useState('');
 
   const track = useStore.getState().library.find(t => t.id === rightClickedTrackId) || 
@@ -383,9 +383,33 @@ export function AddToPlaylistModal() {
   
   if (!track) return null;
 
-  const handleAddToSelected = (playlistId) => {
-    addToPlaylist(playlistId, track.id);
-    closeModal('addToPlaylist');
+  // Check which playlists already contain this track
+  const trackInPlaylist = new Set();
+  playlists.forEach(pl => {
+    if (pl.tracks.includes(track.id)) trackInPlaylist.add(pl.id);
+  });
+
+  const handleAddToSelected = (playlistId, checked) => {
+    if (checked) {
+      // Add to playlist
+      addToPlaylist(playlistId, track.id);
+      // Persist immediately
+      const updatedPlaylist = playlists.find(p => p.id === playlistId);
+      if (updatedPlaylist) {
+        persistPlaylist({ ...updatedPlaylist, tracks: [...updatedPlaylist.tracks, track.id] });
+      }
+    } else {
+      // Remove from playlist
+      const updatedPlaylist = playlists.find(p => p.id === playlistId);
+      if (updatedPlaylist) {
+        const newTracks = updatedPlaylist.tracks.filter(id => id !== track.id);
+        // We need to update the store directly for removal
+        useStore.setState(s => ({
+          playlists: s.playlists.map(p => p.id === playlistId ? { ...p, tracks: newTracks } : p)
+        }));
+        persistPlaylist({ ...updatedPlaylist, tracks: newTracks });
+      }
+    }
   };
 
   const handleCreateAndAdd = () => {
@@ -396,35 +420,60 @@ export function AddToPlaylistModal() {
     setNewPlaylistName('');
   };
 
-  return (
-    <Modal id="addToPlaylist" title={`Add "${track.title}" to Playlist`} className="props-window">
-      <div className="props-body" style={{padding: '16px'}}>
-        {playlists.length === 0 ? (
+  const handleClose = () => {
+    closeModal('addToPlaylist');
+  };
+
+  if (playlists.length === 0) {
+    return (
+      <Modal id="addToPlaylist" title={`Add "${track.title}" to Playlist`} className="props-window">
+        <div className="props-body" style={{padding: '16px'}}>
           <div style={{textAlign: 'center', padding: '20px', color: '#666'}}>
-            <p>No playlists exist yet.</p>
-            <p>Create a new playlist to add this track.</p>
-          </div>
-        ) : (
-          <div style={{marginBottom: '16px'}}>
-            <p style={{fontWeight: 'bold', marginBottom: '8px'}}>Select playlist(s):</p>
-            <div style={{maxHeight: '200px', overflowY: 'auto'}}>
-              {playlists.map(pl => (
-                <label key={pl.id} className="playlist-checkbox-item" style={{display: 'block', padding: '8px', cursor: 'pointer', borderBottom: '1px solid #e0ddd0'}}>
-                  <input 
-                    type="checkbox" 
-                    onChange={(e) => e.target.checked && useStore.getState().addToPlaylist(pl.id, useStore.getState().rightClickedTrackId)}
-                    style={{marginRight: '8px'}}
-                  />
-                  {pl.name} ({pl.tracks.length} tracks)
-                </label>
-              ))}
+            <p style={{marginBottom: '8px', fontWeight: 'bold'}}>No playlists yet</p>
+            <p>You don't have any playlists yet. Go to the Playlists tab to create one!</p>
+            <div style={{marginTop: '16px'}}>
+              <button className="xp-button" onClick={handleClose}>OK</button>
             </div>
           </div>
-        )}
-        <hr />
-        <div style={{marginTop: '12px'}}>
-          <h4>Or create new playlist:</h4>
-          <div style={{display: 'flex', gap: '8px', marginTop: '8px'}}>
+        </div>
+      </Modal>
+    );
+  }
+
+  return (
+    <Modal id="addToPlaylist" title={`Add "${track.title}" to Playlist`} className="props-window">
+      <div className="props-body" style={{padding: '16px', display: 'flex', flexDirection: 'column', minHeight: '300px'}}>
+        <div style={{flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column'}}>
+          <p style={{fontWeight: 'bold', marginBottom: '8px', marginTop: 0}}>Select playlist(s):</p>
+          <div style={{flex: 1, maxHeight: '250px', overflowY: 'auto', border: '1px solid #e0ddd0', borderRadius: '3px'}}>
+            {playlists.map(pl => {
+              const isInPlaylist = trackInPlaylist.has(pl.id);
+              return (
+                <label key={pl.id} className="playlist-checkbox-item" style={{display: 'flex', alignItems: 'center', padding: '8px 12px', cursor: isInPlaylist ? 'not-allowed' : 'pointer', borderBottom: '1px solid #e0ddd0', background: isInPlaylist ? '#f5f5f5' : 'white', gap: '8px'}}>
+                  <input 
+                    type="checkbox" 
+                    checked={isInPlaylist}
+                    disabled={isInPlaylist}
+                    onChange={(e) => handleAddToSelected(pl.id, e.target.checked)}
+                    style={{marginRight: '8px', width: '16px', height: '16px', accentColor: '#0066cc'}}
+                  />
+                  <span style={{flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                    {pl.name} ({pl.tracks.length} tracks)
+                  </span>
+                  {isInPlaylist && (
+                    <span style={{color: '#666', fontSize: '10px', fontStyle: 'italic', whiteSpace: 'nowrap'}}>
+                      Already added
+                    </span>
+                  )}
+                </label>
+              );
+            })}
+          </div>
+        </div>
+        <hr style={{margin: '12px 0'}} />
+        <div style={{marginTop: 'auto', paddingTop: '8px'}}>
+          <h4 style={{marginBottom: '8px', marginTop: 0}}>Or create new playlist:</h4>
+          <div style={{display: 'flex', gap: '8px'}}>
             <input 
               type="text" 
               value={newPlaylistName} 
@@ -433,6 +482,10 @@ export function AddToPlaylistModal() {
               style={{flex: 1, padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
             />
             <button className="xp-button primary" onClick={handleCreateAndAdd} disabled={!newPlaylistName.trim()}>Create & Add</button>
+          </div>
+          <div className="props-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '16px'}}>
+            <button className="xp-button" onClick={handleClose}>Cancel</button>
+            <button className="xp-button primary" onClick={handleClose}>Done</button>
           </div>
         </div>
       </div>

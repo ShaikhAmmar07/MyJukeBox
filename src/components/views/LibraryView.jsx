@@ -71,12 +71,63 @@ export default function LibraryView() {
     e.preventDefault();
     setRightClickedTrack(trackId);
     const menu = document.getElementById('custom-context-menu');
-    if (menu) { menu.style.left = e.clientX + 'px'; menu.style.top = e.clientY + 'px'; menu.classList.remove('hidden'); }
+    if (menu) {
+      // Calculate position with viewport edge detection
+      const menuWidth = 200; // approximate min-width
+      const menuHeight = 180; // approximate height
+      let left = e.clientX;
+      let top = e.clientY;
+      
+      // Flip horizontally if would overflow right edge
+      if (left + menuWidth > window.innerWidth) {
+        left = window.innerWidth - menuWidth - 10;
+      }
+      // Flip vertically if would overflow bottom edge
+      if (top + menuHeight > window.innerHeight) {
+        top = window.innerHeight - menuHeight - 10;
+      }
+      
+      menu.style.left = left + 'px';
+      menu.style.top = top + 'px';
+      menu.classList.remove('hidden');
+    }
   };
 
   const handleActionMenu = (e, trackId) => {
     e.stopPropagation();
-    setActionMenuTrackId(actionMenuTrackId === trackId ? null : trackId);
+    const newId = actionMenuTrackId === trackId ? null : trackId;
+    setActionMenuTrackId(newId);
+    
+    // Handle mobile action menu positioning with flip logic
+    if (newId !== null) {
+      // Use setTimeout to allow DOM to render first
+      setTimeout(() => {
+        const menu = document.querySelector('.action-menu');
+        const btn = e.currentTarget;
+        if (menu && btn) {
+          const rect = btn.getBoundingClientRect();
+          const menuWidth = 180;
+          const menuHeight = 180;
+          
+          // Check if menu would overflow right edge
+          if (rect.right + menuWidth > window.innerWidth) {
+            menu.style.right = 'auto';
+            menu.style.left = `-${menuWidth - 24}px`; // 24px is button width
+          } else {
+            menu.style.right = '0';
+            menu.style.left = 'auto';
+          }
+          // Check if menu would overflow bottom edge
+          if (rect.bottom + menuHeight > window.innerHeight) {
+            menu.style.top = 'auto';
+            menu.style.bottom = '100%';
+          } else {
+            menu.style.top = '100%';
+            menu.style.bottom = 'auto';
+          }
+        }
+      }, 0);
+    }
   };
 
   const sortInd = (field) => sortField === field ? (sortAsc ? ' ▲' : ' ▼') : '';
