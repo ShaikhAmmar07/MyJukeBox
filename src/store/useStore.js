@@ -104,8 +104,8 @@ const useStore = create((set, get) => ({
   showConfirm: (title, message, onConfirm) => set({ confirmDialog: { title, message, onConfirm } }),
   clearConfirm: () => set({ confirmDialog: null }),
   
-  showPrompt: (title, message, defaultValue, onSubmit) => set({ promptDialog: { title, message, defaultValue, onSubmit } }),
-  clearPrompt: () => set({ promptDialog: null }),
+  showPrompt: (title, message, defaultValue, onSubmit) => set({ openModals: { ...get().openModals, prompt: { title, message, defaultValue, onSubmit } } }),
+  clearPrompt: () => set((s) => { const m = { ...s.openModals }; delete m.prompt; return { openModals: m }; }),
   
   addToLibrary: (song) => set((s) => {
     if (s.library.some(t => t.id === song.id)) return {};
@@ -362,28 +362,6 @@ const useStore = create((set, get) => ({
     const details = await fetchItunesDetails(track.fileName || track.title, track.artist).catch(() => null);
     if (!details) return null;
     return get().updateSongMetadata(songId, details);
-  },
-  
-  downloadFromUrl: async (url) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      if (!blob.type.includes('audio') && !blob.type.includes('mpeg') && !blob.type.includes('mp3')) {
-        // Try to infer from URL
-        if (!url.toLowerCase().includes('.mp3')) {
-          throw new Error('Not an audio file');
-        }
-      }
-      const file = new File([blob], url.split('/').pop() || 'download.mp3', { type: 'audio/mpeg' });
-      const uploaded = await get().uploadFiles([file]);
-      return uploaded[0] || null;
-    } catch (e) {
-      if (e.name === 'TypeError' && e.message.includes('fetch')) {
-        throw new Error('CORS_ERROR');
-      }
-      throw e;
-    }
   },
   
   hydrateLibrary: async () => {

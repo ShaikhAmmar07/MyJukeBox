@@ -4,7 +4,7 @@ import HomeView from './views/HomeView';
 import LibraryView from './views/LibraryView';
 import PlaylistsView from './views/PlaylistsView';
 import PlayerBar from './PlayerBar';
-import { EQModal, VisualizerModal, CDBurnerModal, PreferencesModal, PropertiesModal, AboutModal, ConfirmModal, AddToPlaylistModal, EditDetailsModal, StorageErrorToast } from './modals/Modals';
+import { EQModal, VisualizerModal, CDBurnerModal, PreferencesModal, PropertiesModal, AboutModal, ConfirmModal, AddToPlaylistModal, EditDetailsModal, StorageErrorToast, PromptModal, DownloadFromUrlModal } from './modals/Modals';
 
 export default function MainLayout() {
   const audioRef = useRef(null);
@@ -287,6 +287,8 @@ export default function MainLayout() {
       <AddToPlaylistModal />
       <EditDetailsModal />
       <StorageErrorToast />
+      <PromptModal />
+      <DownloadFromUrlModal />
     </>
   );
 }

@@ -550,32 +550,109 @@ export function StorageErrorToast() {
 
 // ===== DOWNLOAD FROM URL MODAL =====
 export function DownloadFromUrlModal() {
-  const { closeModal, downloadFromUrl, showConfirm } = useStore();
+  const { closeModal, showConfirm, uploadFiles } = useStore();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sizeWarning, setSizeWarning] = useState(false);
+  const [blobToUpload, setBlobToUpload] = useState(null);
+
+  const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+
+  const validateUrl = (inputUrl) => {
+    const trimmed = inputUrl.trim();
+    if (!trimmed) return { valid: false, error: 'Please enter a URL.' };
+    try {
+      const parsed = new URL(trimmed);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return { valid: false, error: 'URL must use http:// or https://' };
+      }
+      if (isHttps && parsed.protocol === 'http:') {
+        return { valid: false, error: 'Blocked: insecure (http) link on a secure site.' };
+      }
+      return { valid: true, url: parsed.href };
+    } catch {
+      return { valid: false, error: 'Invalid URL format.' };
+    }
+  };
 
   const handleDownload = async (e) => {
     e.preventDefault();
-    if (!url.trim()) return;
+    const validation = validateUrl(url);
+    if (!validation.valid) {
+      setError(validation.error);
+      return;
+    }
     
     setLoading(true);
     setError(null);
+    setSizeWarning(false);
+    setBlobToUpload(null);
     
     try {
-      const song = await downloadFromUrl(url.trim());
-      if (song) {
+      const response = await fetch(validation.url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const contentType = response.headers.get('content-type') || '';
+      const isAudio = contentType.startsWith('audio/') || 
+                      /\.(mp3|m4a|wav|ogg|flac|aac)$/i.test(validation.url);
+      
+      if (!isAudio) {
+        throw new Error('This URL did not return an audio file.');
+      }
+      
+      const blob = await response.blob();
+      
+      // Size guard: 50MB
+      if (blob.size > 50 * 1024 * 1024) {
+        setSizeWarning(true);
+        setBlobToUpload(blob);
+        setError(`File is ${(blob.size / (1024 * 1024)).toFixed(1)} MB (max 50 MB).`);
+        setLoading(false);
+        return;
+      }
+      
+      // Upload via existing pipeline
+      const file = new File([blob], validation.url.split('/').pop() || 'download.mp3', { type: blob.type || 'audio/mpeg' });
+      const uploaded = await uploadFiles([file]);
+      
+      if (uploaded && uploaded[0]) {
         closeModal('downloadFromUrl');
-        showConfirm("Download Complete", `"${song.title}" has been added to your library.`, null);
+        showConfirm("Download Complete", `"${uploaded[0].title}" has been added to your library.`, null);
+      } else {
+        throw new Error('Upload pipeline returned no track.');
       }
     } catch (e) {
-      if (e.message === 'CORS_ERROR') {
+      // CORS errors typically appear as TypeError with "Failed to fetch"
+      if (e.name === 'TypeError' && e.message.includes('fetch')) {
         setError('Download blocked by browser security (CORS). Please download the file to your computer first, then use the Upload button.');
       } else {
         setError(e.message || 'Failed to download. Please check the URL and try again.');
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmLargeUpload = async () => {
+    if (!blobToUpload) return;
+    setSizeWarning(false);
+    setLoading(true);
+    try {
+      const file = new File([blobToUpload], url.split('/').pop() || 'download.mp3', { type: blobToUpload.type || 'audio/mpeg' });
+      const uploaded = await uploadFiles([file]);
+      if (uploaded && uploaded[0]) {
+        closeModal('downloadFromUrl');
+        showConfirm("Download Complete", `"${uploaded[0].title}" has been added to your library.`, null);
+      }
+    } catch (e) {
+      setError(e.message || 'Failed to save file.');
+    } finally {
+      setLoading(false);
+      setBlobToUpload(null);
     }
   };
 
@@ -599,19 +676,29 @@ export function DownloadFromUrlModal() {
               style={{width: '100%', padding: '4px 6px', border: '1px solid #7f9db9', fontFamily: 'Tahoma, sans-serif', fontSize: '11px'}}
             />
           </div>
-          {error && (
+          {error && !sizeWarning && (
             <div style={{background: '#ffe0e0', border: '1px solid #d32f2f', padding: '8px', marginBottom: '12px', borderRadius: '3px', color: '#d32f2f', fontSize: '11px'}}>
               {error}
             </div>
           )}
+          {sizeWarning && (
+            <div style={{background: '#fff3e0', border: '1px solid #ff9800', padding: '12px', marginBottom: '12px', borderRadius: '3px', color: '#e65100', fontSize: '11px'}}>
+              <p><strong>Large file detected:</strong> {error}</p>
+              <p>Do you want to continue downloading and saving this file?</p>
+              <div style={{display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px'}}>
+                <button type="button" className="xp-button" onClick={() => { setSizeWarning(false); setBlobToUpload(null); }}>Cancel</button>
+                <button type="button" className="xp-button primary" onClick={handleConfirmLargeUpload}>Continue Anyway</button>
+              </div>
+            </div>
+          )}
           <div className="props-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end'}}>
-            <button type="button" className="xp-button" onClick={() => closeModal('downloadFromUrl')} disabled={loading}>Cancel</button>
+            <button type="button" className="xp-button" onClick={() => { closeModal('downloadFromUrl'); setBlobToUpload(null); }} disabled={loading}>Cancel</button>
             <button type="submit" className="xp-button primary" disabled={loading || !url.trim()}>
               {loading ? 'Downloading...' : 'Download'}
             </button>
           </div>
         </form>
-        {loading && (
+        {loading && !sizeWarning && (
           <div style={{marginTop: '12px', textAlign: 'center'}}>
             <div className="xp-progress-bar" style={{width: '100%'}}>
               <div className="xp-progress-fill" style={{width: '100%', animation: 'xp-progress-anim 1s linear infinite'}}></div>
